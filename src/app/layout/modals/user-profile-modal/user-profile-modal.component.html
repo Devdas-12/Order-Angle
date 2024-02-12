@@ -1,0 +1,121 @@
+<ng-template #template let-modal>
+    <!-- <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        </button>
+    </div> -->
+    <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h3 class="modal-title mt-0 mb-0" id="modal-basic-title">User Profile</h3>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            </button>
+        </div>
+        <form [formGroup]="profileUpdate">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="profile-pic">
+                                <div class="profile-bg" (click)="profile.click()">
+                                    <span class="camera">
+                                        <i class="fa-solid fa-camera"></i>
+                                    </span>
+                                    <img [src]="userDetails?.profileImage ? profile_image : _helper.DEFAULT_IMAGE.USER_PROFILE"
+                                        alt="user_profile"
+                                        (error)="$any($event.target).src = _helper.DEFAULT_IMAGE.USER_PROFILE"
+                                        class="user-profile" >
+
+                                        <input id="file" type="file" hidden (change)="onSelectImageFile($event)"
+                                                #profile />
+                                </div>
+                                <p class="username mt-3 mb-1">{{userDetails?.username}}</p>
+                                <p class="phone">+{{userDetails?.phoneCode}} {{userDetails?.phone}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="profile-h3">General Information</h3>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-3">
+                                        <label for="">Username</label>
+                                        <input type="text" class="form-control" formControlName="username"
+                                            placeholder="Enter Username" name="" id="">
+                                        <div class="required position-relative" *ngIf="profileUpdate.get('username')?.errors?.required && profileUpdate.get('username')?.touched">
+                                            Username is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group mb-0">
+                                        <label for="">Subscription</label>
+                                        <div class="position-relative">
+                                            <div class="bubble"
+                                                [ngClass]="userDetails?.isSubscribed ? 'active' : 'inactive' ">
+                                                <span class="bubble-outer-dot">
+                                                    <span class="bubble-inner-dot"></span>
+                                                </span>
+                                            </div>
+                                            <p class="profile_p ps-3"
+                                                [ngClass]="userDetails?.isSubscribed ? 'text-success' : 'text-danger'">
+                                                {{userDetails?.isSubscribed ? 'Active' : 'Inactive'}} </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="profile-h3">Contact Details</h3>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label for="">Phone</label>
+                                        <input type="text" placeholder="Enter Phone" formControlName="phone" [maxlength]="userSettings?.maxPhoneLength" (keypress)="_helper.phone_number_validation($event)" class="form-control">
+                                        <div class="required position-relative" *ngIf="profileUpdate.get('phone')?.errors?.required && profileUpdate.get('phone')?.touched">
+                                            * Phone Number is required
+                                        </div>
+                                        <div class="required position-relative" *ngIf="profileUpdate.get('phone')?.errors?.minlength">
+                                            * Phone Number must be greater than {{userSettings?.minPhoneLength}} letters
+                                        </div>
+                                        <div class="required position-relative" *ngIf="profileUpdate.get('phone')?.errors?.maxlength">
+                                            * Phone Number must be less than {{userSettings?.maxPhoneLength}} letters
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label for="">Email</label>
+                                        <input type="text" class="form-control" placeholder="Enter Email"
+                                            formControlName="email">
+                                        <div class="required position-relative" *ngIf="profileUpdate.get('email')?.errors?.required && profileUpdate.get('email')?.touched">* Email is required</div>
+                                        <div class="required position-relative" *ngIf="profileUpdate.get('email')?.errors?.pattern">* Email is invalid</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label for="">Password</label>
+                                        <input type="text" class="form-control" placeholder="Enter Password"
+                                            formControlName="password">
+                                        <div class="required position-relative" *ngIf="profileUpdate.get('password')?.errors?.minlength && profileUpdate.get('password')?.touched">
+                                                * Password must be greater than 6 letters
+                                            </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-custom" (click)="updateProfile()">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>

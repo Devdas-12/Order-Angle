@@ -1,0 +1,235 @@
+<app-navbar (onOpen)="menuOpen()" [isHome]="true"></app-navbar>
+<section>
+    <div class="banner-image">
+        <!-- <img src="../../../assets/img/home-page/image.png" alt=""> -->
+        <img [src]="imageUrl + this.store_details?.image_url" alt="">
+    </div>
+</section>
+
+<div class="table__details mt-2">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="table__no">
+                <a class="c-pointer" (click)="onSelectTable()">
+                    <span *ngIf="tableNo === ''">
+                        {{'label-title.select-table-no' | translate}} <i class="fa-solid fa-angle-right"></i>
+                    </span>
+                    <span *ngIf="tableNo !== ''" class="select__table">
+                        {{'label-title.table-no' | translate}} {{tableNo}}
+                    </span>
+                </a>
+            </div>
+            <div class="dine__in">
+                <a class="dine_in_btn" (click)="onDine()">{{'label-title.dine-in' | translate}} <i
+                        class="fa-solid fa-angle-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="categories">
+    <div class="container">
+        <div class="categories__list">
+            <div class="row">
+                <div class="col-sm-4 col-6 mt-2" *ngFor="let tag of dietary_tags">
+                    <div (click)="onTagsClick(tag)">
+                        <!-- <img src="../../../assets/img/home-page/New_dish.jpg" alt=""> -->
+                        <img [src]="tag?.image_url ? imageUrl + tag?.image_url : DEFAULT_IMAGE.DEFAULT_CATEGORY"
+                            (error)="$any($event.target).src = DEFAULT_IMAGE.DEFAULT_CATEGORY" alt="">
+                        <p class="mb-0">{{tag.name}}</p>
+                    </div>
+                </div>
+                <div class="col-12" *ngIf="dietary_tags?.length == 0">
+                    <p class="mb-0 text-center py-4">
+                        {{'label-title.no-tags-found' | translate}}
+                    </p>
+                </div>
+                <!-- <div class="col-sm-4 col-6 mt-2">
+                    <div>
+                        <p class="mb-0">Signature Dish</p>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-6 mt-2">
+                    <div>
+                        <img src="../../../assets/img/home-page/pasta.jpg" alt="">
+                        <p class="mb-0">Pasta</p>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-6 mt-2">
+                    <div>
+                        <img src="../../../assets/img/home-page/baked_pasta.jpg" alt="">
+                        <p class="mb-0">Baked Pasta</p>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-6 mt-2">
+                    <div>
+                        <img src="../../../assets/img/home-page/pizza.jpg" alt="">
+                        <p class="mb-0">Pizza</p>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-6 mt-2">
+                    <div>
+                        <img src="../../../assets/img/home-page/sides.jpg" alt="">
+                        <p class="mb-0">Sides</p>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-6 mt-2">
+                    <div>
+                        <img src="../../../assets/img/home-page/salad.jpg" alt="">
+                        <p class="mb-0">Salads</p>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-6 mt-2">
+                    <div>
+                        <img src="{{DEFAULT_IMAGE.DEFAULT_CATEGORY}}" alt="">
+                        <p class="mb-0">Dolse</p>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-6 mt-2">
+                    <div>
+                        <img src="../../../assets/img/home-page/drink.jpg" alt="">
+                        <p class="mb-0">Drink</p>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="store__footer">
+            <div class="store_logo mb-2">
+                <img src="../../../assets/img/logo.png" alt="">
+            </div>
+            <div class="store_landmark">
+                <p class="mb-0">{{'label-title.powered-by-order-angle' | translate}} </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- <swiper-container class="mySwiper" direction="vertical" grab-cursor="true" pagination="true"
+    slides-per-view="5" pagination-clickable="true" mousewheel="true" centered-slides="true">
+    <swiper-slide>
+        <div class="py-3">
+            1
+        </div>
+    </swiper-slide>
+    <swiper-slide><div class="py-3"> 2</div></swiper-slide>
+    <swiper-slide><div class="py-3"> 3</div></swiper-slide>
+    <swiper-slide><div class="py-3"> 4</div></swiper-slide>
+    <swiper-slide><div class="py-3"> 5</div></swiper-slide>
+    <swiper-slide><div class="py-3"> 6</div></swiper-slide>
+    <swiper-slide><div class="py-3"> 7</div></swiper-slide>
+    <swiper-slide><div class="py-3"> 8</div></swiper-slide>
+    <swiper-slide><div class="py-3"> 9</div></swiper-slide>
+</swiper-container> -->
+
+<ng-template #tablemodel let-modal>
+    <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="modal-heading">
+                {{'label-title.select-your-table-no' | translate}}
+            </div>
+        </div>
+        <div class="">
+            <div class="range__pick">
+                <!-- <mbsc-scroller [options]="scrollerOptions"></mbsc-scroller> -->
+                <ng-select [searchable]="false" [clearable]="false" [(ngModel)]="tableNoValue">
+                    <ng-container *ngFor="let table of availableTable">
+                        <ng-container *ngIf="table.is_bussiness">
+                            <ng-option [value]="table.table_no">{{ table.table_no }}</ng-option>
+                        </ng-container>
+                    </ng-container>
+                </ng-select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer no-border">
+        <div class="d-flex justify-content-between w-100">
+            <div>
+                <a class="select_btn me-2" (click)="onSelect()">{{'button-title.select' | translate}}</a>
+                <a class="cancel_btn" (click)="close()">{{'button-title.cancel' | translate}}</a>
+            </div>
+            <div>
+                <a class="switch_btn" (click)="onSwitch()">{{'button-title.switch-to-pick-up' | translate}}</a>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #pickupmodel let-modal>
+    <div class="modal-header">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="modal-heading">
+                {{'label-title.select-your-window-for-pick-up' | translate}}
+            </div>
+            <div class="modalclose" (click)="pickupRef.close()">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="date__time">
+            <ngb-carousel [animation]="false" id="homepage-schedule-date-carousel" (slide)="onSlide($event)">
+                <ng-template ngbSlide *ngFor="let date of date_array; let i = index;" [id]="'slideId_' + i">
+                    <div class="date-list text-center ">
+                        <span>{{date.date_format }}</span>
+                    </div>
+                    <div class="slots-list mt-3">
+                        <div *ngIf="!slot1 && !slot2 && !slot3 && !slot4">{{'label-title.no-slots-available'
+                            | translate}}</div>
+                        <ul class="d-flex align-item-center flex-wrap row">
+                            <li class="col-6" *ngIf="time_array.length > 0  && date.date_format == ASAP">
+                                <a href="javascript:void(0)" id="slot{{-1}}_interval_{{-1}}"
+                                    [class.selected_time]="_cartService.user_cart.selected_time == 'asap'"
+                                    class="primary-btn notselected_time" (click)="set_time('asap')">ASAP</a>
+                            </li>
+                            <ng-container *ngFor="let time of time_array; let time_index = index;">
+                                <li class="col-6">
+                                    <a href="javascript:void(0)" id="slot{{time.type}}_interval_{{time_index}}"
+                                        (click)="set_time(time)"
+                                        [class.selected_time]="(_cartService.user_cart.selected_time && time.time === _cartService.user_cart.selected_time.time && time.date.date === _cartService.user_cart.selected_time.date.date)"
+                                        class="primary-btn notselected_time">{{time.time}}</a>
+                                </li>
+                            </ng-container>
+                        </ul>
+                        <!-- <ul class="d-flex align-item-center flex-wrap row" *ngIf="slot2">
+                            <ng-container *ngFor="let time of time_array; let time_index = index;" >
+                                <li *ngIf="time.type == 2" class="col-6">
+                                    <a href="javascript:void(0)" id="slot{{time.type}}_interval_{{time_index}}"
+                                        (click)="set_time(time)" class="primary-btn notselected_time">{{time.time}} </a>
+                                </li>
+                            </ng-container>
+                        </ul>
+                        <ul class="d-flex align-item-center flex-wrap row" *ngIf="slot3">
+                            <ng-container *ngFor="let time of time_array; let item_index = index;">
+                                <li *ngIf="time.type == 3" class="col-6">
+                                    <a href="javascript:void(0)" id="slot{{time.type}}_interval_{{item_index}}"
+                                        (click)="set_time(time)">{{time.time}} </a>
+                                </li>
+                            </ng-container>
+                        </ul>
+                        <ul class="d-flex align-item-center flex-wrap row" *ngIf="slot4" >
+                            <ng-container *ngFor="let time of time_array; let time_index = index;">
+                                <li *ngIf="time.type == 4" class="col-6">
+                                    <a href="javascript:void(0)" id="slot{{time.type}}_interval_{{time_index}}"
+                                        (click)="set_time(time)">{{time.time}} </a>
+                                </li>
+                            </ng-container>
+                        </ul> -->
+                    </div>
+                </ng-template>
+            </ngb-carousel>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="d-flex justify-content-between w-100 confirm">
+            <a class="confirm__btn" (click)="confirmPickup()">{{'button-title.confirm' | translate}}</a>
+        </div>
+    </div>
+</ng-template>
+
+<app-sidemenu-modal #menuModel></app-sidemenu-modal>

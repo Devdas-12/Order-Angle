@@ -1,0 +1,50 @@
+<ng-template #template let-modal>
+    <!-- <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        </button>
+    </div> -->
+    <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h3 class="modal-title mt-0 mb-0" id="modal-basic-title">{{'heading-title.add-card' | translate}}</h3>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            </button>
+        </div>
+        <form class="card-form">
+            <!-- <div class="row">
+                <div id="card-info" style="width:100%" id="cardInfo"></div>
+                <div class="form-field mt-4">
+                    <button id="wallet-popup-add-card-btn" href="javascript:void(0)" 
+                        class="btn btn-custom btn-secondary submit-btn me-auto ">Add Card</button>
+                </div>
+            </div> -->
+            
+            <div class="row">
+                <div class="col-md-3 d-flex align-items-center mb-4">
+                    <img [src]="card_image" alt="">
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label class="form-label">{{'label-title.card-number' | translate}} </label>
+                        <div id="cc-number"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">{{'label-title.expiry-date' | translate}}</label>
+                        <div id="cc-expiry"></div>
+                    </div>  
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label">{{'label-title.cvv' | translate}}</label>
+                        <div id="cc-cvc"></div>
+                    </div>
+                </div>
+                <div class="col-12 text-end">
+                    <button class="btn btn-custom" (click)="save()">{{'button-title.save' | translate}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>

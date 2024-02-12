@@ -1,0 +1,241 @@
+<ng-template #login let-modal>
+    <!-- <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        </button>
+    </div> -->
+    <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <img src="../../../assets/img/home-page/logo-dark.png" alt="">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            </button>
+        </div>
+        <form [formGroup]="loginForm">
+            <h3 class="modal-title mt-0 mb-4" id="modal-basic-title">{{'heading-title.login' | translate}}</h3>
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="form-label">{{'label-title.email-address' | translate}}</label>
+                <input type="email" class="form-control" formControlName="email" id="exampleInputEmail1"
+                    aria-describedby="emailHelp" autocomplete="off">
+                <div class="required"
+                    *ngIf="loginForm.get('email')?.errors?.required && loginForm.get('email')?.touched">* {{'validation-title.email-is-required' | translate}}</div>
+                <div class="required" *ngIf="loginForm.get('email')?.errors?.pattern">* {{'validation-title.email-is-invalid' | translate}}</div>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1" class="form-label">{{'label-title.password' | translate}}</label>
+                <input type="password" class="form-control" formControlName="password" id="exampleInputPassword1" autocomplete="off">
+                <div class="required"
+                    *ngIf="loginForm.get('password')?.errors?.required && loginForm.get('password')?.touched">* {{'validation-title.password-is-required' | translate}}</div>
+                <div class="required" *ngIf="loginForm.get('password')?.errors?.minlength">* {{'validation-title.password-must-be-more-then-6-letters' | translate}}</div>
+            </div>
+            <div class="form-group d-flex align-items-center justify-content-between">
+                <a (click)="forgotModal()">{{'label-title.forgot-password' | translate}} ?</a>
+                <button type="submit" class="btn btn-custom" (click)="onLogin()">{{'label-title.submit' | translate}}</button>
+            </div>
+            <div>
+                <p>{{'label-title.dont-have-account' | translate}}?<a class="ms-2" (click)="registerModal()">{{'label-title.create-account' | translate}}</a></p>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #register let-modal>
+    <!-- <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        </button>
+    </div> -->
+    <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <img src="../../../assets/img/home-page/logo-dark.png" alt="">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            </button>
+        </div>
+        <form [formGroup]="registerForm">
+            <h3 class="modal-title mt-0 mb-4" id="modal-basic-title">{{'heading-title.register' | translate}}</h3>
+            <div class="form-group">
+                <label for="username" class="form-label">{{'label-title.username' | translate}}</label>
+                <input type="text" class="form-control" formControlName="username" id="username" autocomplete="off">
+                <div class='required'
+                    *ngIf="registerForm.get('username')?.errors?.required && registerForm.get('username')?.touched">
+                    * {{'validation-title.username-is-required' | translate}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+
+                        <div class="form-outline form-white">
+                            <label class="form-label" for="form3Examplea7">{{'label-title.code' | translate}}</label>
+                            <input type="text" id="form3Examplea7" readonly formControlName="phoneCode" (click)="onCodeClick()"
+                                class="form-control" autocomplete="off" />
+                        </div>
+                        <div class='required'
+                            *ngIf="registerForm.get('phoneCode')?.errors?.required && registerForm.get('phoneCode')?.touched">
+                            * {{'validation-title.code-is-required' | translate}}
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+
+                        <div class="form-outline form-white">
+                            <label class="form-label" for="form3Examplea8">{{'label-title.phone-number' | translate}}</label>
+                            <input type="text" id="form3Examplea8" [maxlength]="userSettings?.maxPhoneLength"
+                                (keypress)="helper.phone_number_validation($event)" formControlName="phone"
+                                class="form-control" autocomplete="off" />
+                            <div class="required"
+                                *ngIf="registerForm.get('phone')?.errors?.required && registerForm.get('phone')?.touched">
+                                * {{'validation-title.phone-is-required' | translate}}
+                            </div>
+                            <div class="required" *ngIf="registerForm.get('phone')?.errors?.minlength">
+                                * {{'validation-title.min-phone-length-is' | translate}} {{userSettings?.minPhoneLength}}
+                            </div>
+                            <div class="required" *ngIf="registerForm.get('phone')?.errors?.maxlength">
+                                * {{'validtion-title.max-phone-length-is' | translate}} {{userSettings?.maxPhoneLength}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="form-label">{{'label-title.email-address' | translate}}</label>
+                <input type="email" class="form-control" formControlName="email" id="exampleInputEmail1"
+                    aria-describedby="emailHelp" autocomplete="off">
+                <div class="required"
+                    *ngIf="registerForm.get('email')?.errors?.required && registerForm.get('email')?.touched">
+                    * {{'validation-title.email-is-required' | translate}}
+                </div>
+                <div class="required" *ngIf="registerForm.get('email')?.errors?.pattern">
+                    * {{'validation-title.email-is-invalid' | translate}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1" class="form-label">{{'label-title.password' | translate}}</label>
+                <input type="password" class="form-control" formControlName="password" id="exampleInputPassword1" autocomplete="off">
+                <div class="required"
+                    *ngIf="registerForm.get('password')?.errors?.required && registerForm.get('password')?.touched">
+                    * {{'label-title.password-is-required' | translate}}
+                </div>
+            </div>
+            <div class="form-group form-check d-flex mb-5">
+                <div>
+                    <input class="form-check-input me-2" formControlName="terms_and_condition" type="checkbox"
+                        id="form2Example3c" autocomplete="off" />
+                    <label class="form-check-label" for="form2Example3">
+                        {{'label-title.i-aggre-all-statements' | translate}} <a href="#!"> {{'label-title.terms-of-service' | translate}}</a>
+                        
+                    </label>
+                </div>
+                <div class="required" style="left: 0;top: 20px;"
+                    *ngIf="registerForm.get('terms_and_condition')?.errors?.required && registerForm.get('terms_and_condition')?.touched">
+                    * {{'validation-title.terms-conditions-are-required' | translate}}
+                </div>
+                <div class="required" style="left: 0;top: 24px;"
+                    *ngIf="registerForm.get('terms_and_condition')?.status == 'VALID' && registerForm.get('terms_and_condition')?.value == false">
+                    * {{'validation-title.terms-conditions-are-required' | translate}}
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+                <p class="text-center text-muted mb-0"> {{'label-title.have-already-account' | translate}} ?<a href="#!"
+                        (click)="loginModal()"><u> {{'label-title.login-here' | translate}}</u></a></p>
+                <button type="submit" class="btn btn-custom" (click)="onRegister()">{{'button-title.register' | translate}}</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #forgot_password let-modal>
+    <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <img src="../../../assets/img/home-page/logo-dark.png" alt="">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            </button>
+        </div>
+        <form [formGroup]="forgotForm">
+            <h3 class="modal-title mt-0 mb-4" id="modal-basic-title">{{'label-title.forgot-password' | translate}}</h3>
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="form-label">{{'label-title.email-address' | translate}}</label>
+                <input type="email" class="form-control" formControlName="email" id="exampleInputEmail1"
+                    aria-describedby="emailHelp" autocomplete="off">
+                <div class="required"
+                    *ngIf="forgotForm.get('email')?.errors?.required && forgotForm.get('email')?.touched">* {{'validation-title.email-is-required' | translate}}</div>
+                <div class="required" *ngIf="forgotForm.get('email')?.errors?.pattern">* {{'validation-title.email-is-invalid' | translate }}</div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="submit" class="btn btn-custom" (click)="onForgot()">{{'label-title.submit' | translate}}</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #reset_password let-modal>
+    <div class="modal-body">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <img src="../../../assets/img/home-page/logo-dark.png" alt="">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            </button>
+        </div>
+        <form [formGroup]="resetPasswordForm">
+            <h3 class="modal-title mt-0 mb-4" id="modal-basic-title">{{'heading-title.reset-password' | translate}}</h3>
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="form-label">{{'label-title.otp' | translate}}</label>
+                <input type="text" class="form-control" formControlName="emailOtp" [maxlength]="6" (keypress)="helper.phone_number_validation($event)" id="exampleInputEmail1"
+                    aria-describedby="emailHelp" autocomplete="off">
+                <div class="required" *ngIf="resetPasswordForm.get('emailOtp')?.errors?.required && resetPasswordForm.get('emailOtp')?.touched">* {{'validation-title.otp-is-required' | translate}} </div>
+                <div class="required" *ngIf="resetPasswordForm.get('emailOtp')?.errors?.minlength">* {{'validation-title.otp-should-be-6-letters' | translate}} </div>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="form-label">{{'label-title.new-password' | translate}} New Password</label>
+                <input type="email" class="form-control" formControlName="password" id="exampleInputEmail1"
+                    aria-describedby="emailHelp" autocomplete="off">
+                <div class="required" *ngIf="resetPasswordForm.get('password')?.errors?.required && resetPasswordForm.get('password')?.touched">* {{'validation-title.new-password-is-required' | translate}}</div>
+                <div class="required" *ngIf="resetPasswordForm.get('password')?.errors?.minlength">* {{'validation-title.password-must-be-greater-than-6-letters' | translate}}</div>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="form-label">{{'label-title.confirm-password' | translate}}</label>
+                <input type="email" class="form-control" formControlName="confirmPassword" id="exampleInputEmail1"
+                    aria-describedby="emailHelp" autocomplete="off">
+                <div class="required" *ngIf="resetPasswordForm.get('confirmPassword')?.errors?.required && resetPasswordForm.get('confirmPassword')?.touched">* {{'validation-title.confirm-password-is-required' | translate}} </div>
+                <div class="required" *ngIf="resetPasswordForm.get('confirmPassword')?.errors?.minlength">* {{'validation-title.password-must-be-greater-than-6-letters' | translate}}</div>
+                <div class="required" *ngIf="passwordsDoNotMatch">
+                    * {{'validation-title.password-is-not-match' | translate}}
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="submit" class="btn btn-custom" (click)="onReset()">{{'label-title.submit' | translate}}</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #phoneCode let-modal>
+    <div class="modal-body pb-0">
+        <h4 class="modal-title mb-2 mt-0" id="modal-basic-title">{{'heading-title.pickup-your-country-code' | translate}}</h4>
+        <div class="form-group country-code">
+            <input type="email" class="form-control" [(ngModel)]="filterValue" placeholder="Country code"
+                id="exampleInputEmail1" aria-describedby="emailHelp" autocomplete="off">
+        </div>
+    </div>
+    <div class="country-list">
+        <ul>
+            <li class="list-item" *ngFor="let country of countryList | countrySearch: filterValue">
+                <div class="row c-pointer" (click)="selectedCode(country.code)"
+                    [ngClass]="registerForm.value.phoneCode == country.code ? 'active' : ''">
+                    <div class="col-3">{{country.code}}</div>
+                    <div class="col-9">{{country.name}}</div>
+                    <div class="selected" *ngIf="registerForm.value.phoneCode == country.code">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-check" _ngcontent-ng-c4224083166="">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </li>
+            <li *ngIf="(countryList | countrySearch: filterValue)?.length === 0" style="border-bottom: unset;"> 
+                <div class="text-center">
+                    {{'label-title.no-country-found' | translate}}
+                </div>
+            </li>
+        </ul>
+    </div>
+</ng-template>

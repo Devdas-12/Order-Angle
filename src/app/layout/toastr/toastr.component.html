@@ -1,0 +1,29 @@
+<!-- <div [@toastTrigger]="(toast.showsToast$ | async) ? 'open' : 'close'" [class]="toast.toastState$ | async" > 
+    <div class="d-flex align-items-center">
+        <div class="success-badge">
+            <i class="fa-solid fa-circle-check success-icon" ></i>
+            <i class="fa-solid fa-circle-exclamation error-icon"></i>
+        </div>
+        <div>
+            <h3 class="mb-0 success-msg" >Success Message</h3>
+            <h3 class="mb-0 error-msg" >Error Message</h3>
+            {{ toast.toastMessage$ | async }}
+        </div>
+    </div>
+
+    <a class="close-btn ms-2" (click)="dismiss()">
+        <small class="c-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x" _ngcontent-ng-c4224083166="" ><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </small>
+    </a>
+        <div class="progress-bar" *ngIf="(toast.counter$ | async) as progress" [style.width.%]="progress"></div>
+</div> -->
+
+<div class="flex">
+    <div class="data">{{data}}</div>
+    <!-- <div class="dismiss">
+        <button mat-icon-button (click)="snackBarRef.dismiss()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div> -->
+</div>

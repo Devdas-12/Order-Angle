@@ -1,0 +1,46 @@
+.btn-custom {
+    line-height: 16px;
+    border-width: 1px;
+    border-color: transparent;
+    min-width: 80px;
+    // padding: 10px 20px;
+}
+
+.btn-custom.btn-primary {
+    &:hover {
+        border-color: #eb3349;
+    }
+}
+
+.btn-secondary {
+    border-color: #eb3349;
+    background: transparent;
+    color: #eb3349;
+
+    &:hover {
+        border-color: transparent;
+        background: linear-gradient(to right, #eb3349, #f45c43);
+        color: white;
+        opacity: 1;
+    }
+}
+
+.truncate-span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 62px;
+}
+
+.profile-btn .dropdown-menu .dropdown-item {
+    font-size: 14px;
+    line-height: 28px !important;
+    color: black !important;
+    padding: 0.35rem 1rem !important;
+    text-align: left !important;
+    letter-spacing: 0.54px;
+
+    &:hover{
+        color: #eb3349 !important;
+    }
+}

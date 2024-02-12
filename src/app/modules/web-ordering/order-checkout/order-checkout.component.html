@@ -1,0 +1,331 @@
+<div class="checkout-header">
+    <div class="container">
+        <div class="header-main position-relative">
+            <div class="head">
+                {{store?.name[0]}}
+            </div>
+        </div>
+    </div>
+    <div class="menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px" viewBox="0 0 24 24" fill="none">
+            <path d="M5 6.5H19V8H5V6.5Z" fill="#1F2328" />
+            <path d="M5 16.5H19V18H5V16.5Z" fill="#1F2328" />
+            <path d="M5 11.5H19V13H5V11.5Z" fill="#1F2328" />
+        </svg>
+    </div>
+</div>
+
+<div class="chckout-main">
+    <div class="px-3 px-sm-4 px-lg-0 container-lg container-xl">
+        <div class="heading d-flex align-items-center justify-content-between">
+            <h1>Checkout</h1>
+            <div class="back">
+                <a routerLink="/web-ordering/restaurant-page" class="mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none"
+                        style="vertical-align: sub;">
+                        <path d="M6 12H18M6 12L11 7M6 12L11 17" stroke="#2d2d2d" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg> Back to menu
+                </a>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-7 col-lg-8 pe-md-3">
+                <div class="contact-info">
+                    <h4 class="mb-3">Contact Info</h4>
+                    <div class="info-form p-4">
+                        <form [formGroup]="checkOutForm">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="name">First name*</label>
+                                        <input type="text" class="form-control" formControlName="first_name">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="name">Last name*</label>
+                                        <input type="text" class="form-control" formControlName="last_name">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="name">Email*</label>
+                                        <input type="text" class="form-control" formControlName="email">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-3">
+                                        <label for="name">Mobile number*</label>
+                                        <div class="input-group" ngbDropdown>
+                                            <span class="input-group-text" id="basic-addon1" ngbDropdownToggle><img
+                                                    [src]="imageUrl + selectedCountry?.country_flag" alt="">
+                                            </span>
+                                            <span class="input-group-text"
+                                                style="border-left: unset;border-right: unset;padding-left: 0px;">{{selectedCountry?.country_phone_code}}</span>
+                                            <input type="text" class="form-control"
+                                                (keypress)="helper.phone_number_validation($event);"
+                                                aria-label="Username" aria-describedby="basic-addon1"
+                                                style="border-left: unset;border-top-right-radius:6px;border-bottom-right-radius: 6px;"
+                                                formControlName="phone">
+                                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                                <div ngbDropdownItem *ngFor="let country of countryList"
+                                                    (click)="onSelect(country)">
+                                                    <div class="d-flex align-item-center justify-content-between">
+                                                        <div>
+                                                            <img [src]="imageUrl + country.country_flag" class="me-3"
+                                                                alt="">
+                                                            <span>{{country.country_name}}</span>
+                                                        </div>
+                                                        <div>
+                                                            <span class="ms-auto">{{country.country_phone_code}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group d-flex mb-2">
+                                        <input type="checkbox" class="option-input me-2">
+                                        <label for="account">Create an account for a faster checkout and to track your
+                                            order history.</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group d-flex">
+                                        <input type="checkbox" class="option-input me-2">
+                                        <label for="account">Stay up to date with restuarant news and exclusive offers
+                                            by sms and email.</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="payment contact-info mt-5">
+                    <h4>Payment</h4>
+                    <div class="payment-options info-form p-4">
+                        <div class="d-flex justify-content-between align-items-center pb-2 border-bottom"
+                            *ngIf="isGoogleApplePay">
+                            <div class="form-group">
+                                <input type="radio" id="google-pay" name="payment-type" [checked]="paymentIndex == 1"
+                                    (click)="changePayment(1)">
+                                <label for="google-pay">Pay with Google Pay</label>
+                            </div>
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="28px" viewBox="0 -11 70 70"
+                                    fill="none">
+                                    <rect x="0.5" y="0.5" width="69" height="47" rx="5.5" fill="white" stroke="black" />
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M33.0603 31.5161V25.4741H36.1786C37.4564 25.4741 38.535 25.046 39.4142 24.2015L39.6252 23.9875C41.2313 22.2391 41.1258 19.5155 39.4142 17.898C38.5584 17.0416 37.3861 16.5778 36.1786 16.6016H31.1729V31.5161H33.0603ZM33.0605 23.6425V18.4332H36.2262C36.9063 18.4332 37.5512 18.6948 38.0319 19.1706C39.052 20.1696 39.0754 21.8347 38.0905 22.8694C37.6098 23.3809 36.9297 23.6663 36.2262 23.6425H33.0605ZM48.4293 22.1083C47.6204 21.359 46.5185 20.9784 45.1234 20.9784C43.3298 20.9784 41.9816 21.6444 41.0906 22.9646L42.7553 24.0231C43.3649 23.1192 44.1973 22.6673 45.2524 22.6673C45.9206 22.6673 46.5653 22.9171 47.0694 23.369C47.5618 23.7972 47.8432 24.4156 47.8432 25.0698V25.5098C47.1163 25.1055 46.2019 24.8914 45.0765 24.8914C43.7635 24.8914 42.7084 25.2006 41.923 25.831C41.1375 26.4613 40.739 27.2939 40.739 28.3524C40.7155 29.3158 41.1258 30.2316 41.8527 30.85C42.5912 31.5161 43.5291 31.8491 44.631 31.8491C45.9323 31.8491 46.9639 31.2663 47.7494 30.1007H47.8314V31.5161H49.6368V25.2244C49.6368 23.9042 49.2382 22.8576 48.4293 22.1083ZM43.3066 29.6369C42.9197 29.3514 42.6852 28.8876 42.6852 28.3881C42.6852 27.8291 42.9432 27.3652 43.4473 26.9965C43.9632 26.6278 44.6081 26.4375 45.3702 26.4375C46.4255 26.4256 47.2462 26.6635 47.8325 27.1392C47.8325 27.948 47.5159 28.6497 46.8945 29.2444C46.3317 29.8153 45.5696 30.1364 44.7723 30.1364C44.2446 30.1483 43.7287 29.9699 43.3066 29.6369ZM53.693 35.9999L60.0001 21.3114H57.9485L55.0295 28.6378H54.9943L52.0049 21.3114H49.9534L54.0916 30.8619L51.747 35.9999H53.693Z"
+                                        fill="#2d2d2d" />
+                                    <path
+                                        d="M26.544 24.1659C26.544 23.5831 26.4971 23.0003 26.4034 22.4294H18.4434V25.7239H23.0037C22.8161 26.7825 22.2065 27.734 21.3155 28.3286V30.4695H24.0353C25.6296 28.9828 26.544 26.7825 26.544 24.1659Z"
+                                        fill="#4285F4" />
+                                    <path
+                                        d="M18.4442 32.539C20.7185 32.539 22.6411 31.7778 24.0361 30.4695L21.3164 28.3287C20.5544 28.852 19.5814 29.1493 18.4442 29.1493C16.2403 29.1493 14.3763 27.6388 13.7081 25.6169H10.9062V27.8291C12.3365 30.7193 15.2555 32.539 18.4442 32.539Z"
+                                        fill="#34A853" />
+                                    <path
+                                        d="M13.708 25.6169C13.3563 24.5584 13.3563 23.4048 13.708 22.3343V20.134H10.9058C9.69808 22.5484 9.69808 25.4029 10.9058 27.8172L13.708 25.6169Z"
+                                        fill="#FBBC04" />
+                                    <path
+                                        d="M18.4442 18.8019C19.6517 18.7781 20.8123 19.242 21.6798 20.0864L24.0948 17.6363C22.559 16.1853 20.5427 15.3885 18.4442 15.4123C15.2555 15.4123 12.3365 17.2439 10.9062 20.134L13.7081 22.3462C14.3763 20.3124 16.2403 18.8019 18.4442 18.8019Z"
+                                        fill="#EA4335" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center"
+                                [ngClass]="isGoogleApplePay ? 'pt-2' : ''">
+                                <div class="form-group">
+                                    <input type="radio" id="card" name="payment-type" [checked]="paymentIndex == 2"
+                                        (click)="changePayment(2)">
+                                    <label for="card">Pay with Card</label>
+                                </div>
+                                <div class="d-flex">
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="28px"
+                                            viewBox="0 -9 58 58" fill="none">
+                                            <rect x="0.5" y="0.5" width="57" height="39" rx="3.5" fill="white"
+                                                stroke="#F3F3F3" />
+                                            <path d="M34.3102 28.9765H23.9591V10.5122H34.3102V28.9765Z"
+                                                fill="#FF5F00" />
+                                            <path
+                                                d="M24.6223 19.7429C24.6223 15.9973 26.3891 12.6608 29.1406 10.5107C27.1285 8.93843 24.5892 7.99998 21.8294 7.99998C15.2961 7.99998 10 13.2574 10 19.7429C10 26.2283 15.2961 31.4857 21.8294 31.4857C24.5892 31.4857 27.1285 30.5473 29.1406 28.975C26.3891 26.8249 24.6223 23.4884 24.6223 19.7429"
+                                                fill="#EB001B" />
+                                            <path
+                                                d="M48.2706 19.7429C48.2706 26.2283 42.9745 31.4857 36.4412 31.4857C33.6814 31.4857 31.1421 30.5473 29.1293 28.975C31.8815 26.8249 33.6483 23.4884 33.6483 19.7429C33.6483 15.9973 31.8815 12.6608 29.1293 10.5107C31.1421 8.93843 33.6814 7.99998 36.4412 7.99998C42.9745 7.99998 48.2706 13.2574 48.2706 19.7429"
+                                                fill="#F79E1B" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="28px"
+                                            viewBox="0 -11 70 70" fill="none">
+                                            <rect x="0.5" y="0.5" width="69" height="47" rx="5.5" fill="white"
+                                                stroke="#D9D9D9" />
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M21.2505 32.5165H17.0099L13.8299 20.3847C13.679 19.8267 13.3585 19.3333 12.8871 19.1008C11.7106 18.5165 10.4142 18.0514 9 17.8169V17.3498H15.8313C16.7742 17.3498 17.4813 18.0514 17.5991 18.8663L19.2491 27.6173L23.4877 17.3498H27.6104L21.2505 32.5165ZM29.9675 32.5165H25.9626L29.2604 17.3498H33.2653L29.9675 32.5165ZM38.4467 21.5514C38.5646 20.7346 39.2717 20.2675 40.0967 20.2675C41.3931 20.1502 42.8052 20.3848 43.9838 20.9671L44.6909 17.7016C43.5123 17.2345 42.216 17 41.0395 17C37.1524 17 34.3239 19.1008 34.3239 22.0165C34.3239 24.2346 36.3274 25.3992 37.7417 26.1008C39.2717 26.8004 39.861 27.2675 39.7431 27.9671C39.7431 29.0165 38.5646 29.4836 37.3881 29.4836C35.9739 29.4836 34.5596 29.1338 33.2653 28.5494L32.5582 31.8169C33.9724 32.3992 35.5025 32.6338 36.9167 32.6338C41.2752 32.749 43.9838 30.6502 43.9838 27.5C43.9838 23.5329 38.4467 23.3004 38.4467 21.5514ZM58 32.5165L54.82 17.3498H51.4044C50.6972 17.3498 49.9901 17.8169 49.7544 18.5165L43.8659 32.5165H47.9887L48.8116 30.3004H53.8772L54.3486 32.5165H58ZM51.9936 21.4342L53.1701 27.1502H49.8723L51.9936 21.4342Z"
+                                                fill="#172B85" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-element" *ngIf="paymentIndex == 2">
+                                <div>
+                                    <input type="text" class="card-holder" placeholder="Cardholder's Name">
+                                </div>
+                                <div id="card-element">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="payment-btn d-none d-md-block contact-info mt-5">
+                        <div *ngIf="!ismobile && paymentIndex == 1">
+                            <div id="google-pay-button"></div>
+                        </div>
+                        <div *ngIf="paymentIndex == 2">
+                            <a class="pay-btn" type="button">Pay with
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    fill="#fff" height="24px" width="24px" version="1.1" id="Capa_1" viewBox="0 0 60 60"
+                                    xml:space="preserve">
+                                    <g>
+                                        <path
+                                            d="M55.783,8H4.217C1.892,8,0,9.892,0,12.217v35.566C0,50.108,1.892,52,4.217,52h51.566C58.108,52,60,50.108,60,47.783V12.217   C60,9.892,58.108,8,55.783,8z M58,47.783C58,49.005,57.006,50,55.783,50H4.217C2.994,50,2,49.005,2,47.783V12.217   C2,10.995,2.994,10,4.217,10h51.566C57.006,10,58,10.995,58,12.217V47.783z" />
+                                        <path
+                                            d="M6,18h9c0.553,0,1-0.448,1-1s-0.447-1-1-1H6c-0.553,0-1,0.448-1,1S5.447,18,6,18z" />
+                                        <path
+                                            d="M28,16h-9c-0.553,0-1,0.448-1,1s0.447,1,1,1h9c0.553,0,1-0.448,1-1S28.553,16,28,16z" />
+                                        <path
+                                            d="M6,23h1c0.553,0,1-0.448,1-1s-0.447-1-1-1H6c-0.553,0-1,0.448-1,1S5.447,23,6,23z" />
+                                        <path
+                                            d="M11,21c-0.553,0-1,0.448-1,1s0.447,1,1,1h2c0.553,0,1-0.448,1-1s-0.447-1-1-1H11z" />
+                                        <path
+                                            d="M19,22c0-0.552-0.447-1-1-1h-1c-0.553,0-1,0.448-1,1s0.447,1,1,1h1C18.553,23,19,22.552,19,22z" />
+                                        <path
+                                            d="M24,23c0.553,0,1-0.448,1-1s-0.447-1-1-1h-2c-0.553,0-1,0.448-1,1s0.447,1,1,1H24z" />
+                                        <path
+                                            d="M27.29,21.29C27.109,21.48,27,21.74,27,22c0,0.26,0.109,0.52,0.29,0.71C27.479,22.89,27.74,23,28,23   c0.27,0,0.52-0.11,0.71-0.29C28.89,22.52,29,22.26,29,22c0-0.26-0.11-0.52-0.29-0.71C28.33,20.92,27.66,20.92,27.29,21.29z" />
+                                        <path d="M37,27h18V15H37V27z M39,17h14v8H39V17z" />
+                                        <path d="M5,45h11v-8H5V45z M7,39h7v4H7V39z" />
+                                        <path d="M18,45h11v-8H18V45z M20,39h7v4h-7V39z" />
+                                        <path d="M31,45h11v-8H31V45z M33,39h7v4h-7V39z" />
+                                        <path d="M44,45h11v-8H44V45z M46,39h7v4h-7V39z" />
+                                    </g>
+                                </svg>
+                            </a>
+                        </div>
+                        <p>By placing an order you agree to our <a href="javascript:;">Terms and Conditions</a> our <a
+                                href="javascript:;">Privacy Policy </a> and <a href="javascript:;">Collection Notice</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 col-lg-4 ps-3 mt-5 mt-md-0">
+                <div class="order-summery contact-info" *ngIf="store">
+                    <h4 class="mb-3">Order Summery</h4>
+                    <div class="address p-4">
+                        <div class="d-flex pb-3 pt-2 border-bottom justify-content-between">
+                            <div>
+                                <p class="mb-0">Pick-up order</p>
+                                <p class="mb-0">Today at 6:15pm</p>
+                            </div>
+                            <div>
+                                <a href="javascript:;">Change</a>
+                            </div>
+                        </div>
+                        <div class="pickup-add align-items-center pt-3 pb-2 d-flex">
+                            <img src="../../../../assets/img/logo.png" alt="">
+                            <div>
+                                <p class="mb-0">{{store.name[0]}} - {{store.city_details.city_name}}</p>
+                                <p class="mb-0">{{store.address}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="invoice p-4" *ngIf="!invoice_failed">
+                        <div class="items border-bottom pb-2" *ngIf="cartItems">
+                            <div class="d-flex justify-content-between" *ngFor="let item of cartItems.cart">
+                                <p class="mb-0">{{item.items[0].quantity}} x {{item.items[0].item_name}}</p>
+                                <p class="mb-0">{{_cartService.currency}}{{(item.items[0].item_price).toFixed(2)}}</p>
+                            </div>
+                            <!-- <div class="d-flex justify-content-between">
+                                <p class="mb-0">1 x Spaghetti Bolognese</p>
+                                <p class="mb-0">$21.00</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">1 x Rocket & Parmesan Salad</p>
+                                <p class="mb-0">$18.00</p>
+                            </div>
+                            <div class="d-flex">
+                                <p class="mb-0">Still hungry? Add more items</p>
+                            </div> -->
+                        </div>
+                        <div class="sub-total py-2 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Subtotal</p>
+                                <p class="mb-0">{{_cartService.currency}}{{(order_payment.total).toFixed(2)}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0">Card fee</p>
+                                <p class="mb-0">{{_cartService.currency}}0.00</p>
+                            </div>
+                        </div>
+                        <div class="border-bottom py-2">
+                            <div class="d-flex">
+                                <p class="mb-0">Add promo code</p>
+                            </div>
+                        </div>
+                        <div class="border-bottom py-2">
+                            <div class="d-flex justify-content-between">
+                                <p class="mb-0 total">Total</p>
+                                <p class="mb-0 total">{{_cartService.currency}}{{(order_payment.total).toFixed(2)}}</p>
+                            </div>
+                        </div>
+                        <div class="form-group notes pt-3">
+                            <label for="notes">Order notes (optional)</label>
+                            <input type="text" class="form-control" placeholder="Add a note">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-btn d-block d-md-none contact-info mt-5">
+                <div *ngIf="ismobile && paymentIndex == 1">
+                    <div id="google-pay-button"></div>
+                </div>
+                <div *ngIf="paymentIndex == 2">
+                    <a class="pay-btn" type="button">Pay with
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#fff"
+                            height="24px" width="24px" version="1.1" id="Capa_1" viewBox="0 0 60 60"
+                            xml:space="preserve">
+                            <g>
+                                <path
+                                    d="M55.783,8H4.217C1.892,8,0,9.892,0,12.217v35.566C0,50.108,1.892,52,4.217,52h51.566C58.108,52,60,50.108,60,47.783V12.217   C60,9.892,58.108,8,55.783,8z M58,47.783C58,49.005,57.006,50,55.783,50H4.217C2.994,50,2,49.005,2,47.783V12.217   C2,10.995,2.994,10,4.217,10h51.566C57.006,10,58,10.995,58,12.217V47.783z" />
+                                <path
+                                    d="M6,18h9c0.553,0,1-0.448,1-1s-0.447-1-1-1H6c-0.553,0-1,0.448-1,1S5.447,18,6,18z" />
+                                <path
+                                    d="M28,16h-9c-0.553,0-1,0.448-1,1s0.447,1,1,1h9c0.553,0,1-0.448,1-1S28.553,16,28,16z" />
+                                <path
+                                    d="M6,23h1c0.553,0,1-0.448,1-1s-0.447-1-1-1H6c-0.553,0-1,0.448-1,1S5.447,23,6,23z" />
+                                <path
+                                    d="M11,21c-0.553,0-1,0.448-1,1s0.447,1,1,1h2c0.553,0,1-0.448,1-1s-0.447-1-1-1H11z" />
+                                <path
+                                    d="M19,22c0-0.552-0.447-1-1-1h-1c-0.553,0-1,0.448-1,1s0.447,1,1,1h1C18.553,23,19,22.552,19,22z" />
+                                <path
+                                    d="M24,23c0.553,0,1-0.448,1-1s-0.447-1-1-1h-2c-0.553,0-1,0.448-1,1s0.447,1,1,1H24z" />
+                                <path
+                                    d="M27.29,21.29C27.109,21.48,27,21.74,27,22c0,0.26,0.109,0.52,0.29,0.71C27.479,22.89,27.74,23,28,23   c0.27,0,0.52-0.11,0.71-0.29C28.89,22.52,29,22.26,29,22c0-0.26-0.11-0.52-0.29-0.71C28.33,20.92,27.66,20.92,27.29,21.29z" />
+                                <path d="M37,27h18V15H37V27z M39,17h14v8H39V17z" />
+                                <path d="M5,45h11v-8H5V45z M7,39h7v4H7V39z" />
+                                <path d="M18,45h11v-8H18V45z M20,39h7v4h-7V39z" />
+                                <path d="M31,45h11v-8H31V45z M33,39h7v4h-7V39z" />
+                                <path d="M44,45h11v-8H44V45z M46,39h7v4h-7V39z" />
+                            </g>
+                        </svg></a>
+                </div>
+                <p>By placing an order you agree to our <a href="javascript:;">Terms and Conditions</a> our <a
+                        href="javascript:;">Privacy Policy </a> and <a href="javascript:;">Collection Notice</a></p>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,390 @@
+<div class="restruant-container position-relative d-flex">
+    <div class="restruant-banner position-relative">
+        <img [src]="imageUrl + store_detail?.image_url" class="banner-image" alt="">
+        <div class="container-md container-lg container-xl position-relative">
+            <div class="store-header d-flex align-items-center justify-content-between">
+                <div class="store-logo">
+                    <img src="../../../../assets/img/logo.png" alt="">
+                </div>
+                <div class="store-name">
+                    <h2 class="mb-0">{{store_detail?.name}}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="address_bar">
+            <div class="container-md container-lg container-xl">
+                <div class="row align-items-center">
+                    <div class="col-md-12 col-lg-6">
+                        <div class="d-flex switch">
+                            <div class="pickup active">
+                                <a><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        fill="#fff" version="1.1" id="Capa_1" width="14px" height="14px"
+                                        viewBox="0 0 335.765 335.765" xml:space="preserve">
+                                        <g>
+                                            <g>
+                                                <polygon
+                                                    points="311.757,41.803 107.573,245.96 23.986,162.364 0,186.393 107.573,293.962 335.765,65.795   " />
+                                            </g>
+                                        </g>
+                                    </svg> {{this._cartService.user_cart.is_user_pick_up_order ? 'Pick-up' :
+                                    'Delivery'}}</a>
+                            </div>
+                            <div class="pickup dine-in">
+                                <a>Dine-in</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6 mt-3 mt-lg-0">
+                        <div class="d-flex align-items-center justify-content-lg-end order-type">
+                            <div class="dot"></div>
+                            Pick-up service ends in 25 mins
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tags_filter mb-4" id="filter-sticky">
+            <div class="container-md container-lg container-xl">
+                <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between">
+                    <div class="tag_list d-flex" id="tags-element">
+                        <div *ngFor="let product of filter_items; let pr_index = index ;" class="first-child">
+                            <a class="px-3" [ngClass]="product._id._id == currentSection ? 'active' : '' "
+                                (click)="onItemClick(product._id , 'vertical')" id="{{product._id.unique_id}}"
+                                *ngIf="product.items.length > 0">{{product._id.name}}</a>
+                        </div>
+                    </div>
+                    <div class="store_search d-flex justify-content-lg-end mt-3 mt-lg-0">
+                        <div class="position-relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+                                fill="none" class="search">
+                                <path
+                                    d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
+                                    stroke="#525252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="items_details">
+            <div class="container-md container-lg container-xl">
+                <div class="items__list" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event)"> 
+                    <div *ngFor="let product of filter_items" class="items__list" [id]="product._id._id">
+                        <div class="main__item">
+                            <div class="name">
+                                <h1 class="mb-3">{{product._id.name}}</h1>
+                            </div>
+                        </div>
+                        <div class="row gap-20">
+                            <div *ngFor="let item of product.items" class="col-md-6 col-lg-4 col-xl-3">
+                                <div class="sub__items card" (click)="onProductClick(item)">
+                                    <div class="item__image">
+                                        <img [src]="item.image_url ? image_url + item.image_url[0] : DEFAULT_IMAGE.DEFAULT_ITEM"
+                                            (error)="$any($event.target).src=DEFAULT_IMAGE.DEFAULT_ITEM" alt="">
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="item__details h-100 d-flex flex-column justify-content-between">
+                                            <div>
+                                                <h5>{{item.name}}</h5>
+                                                <p class="details">{{item.details}}</p>
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h5 class="price mb-0">{{details.currency}}{{item.price}}</h5>
+                                                <div class="tags">
+                                                    <span *ngFor="let tags of item.dietary_tags ; let last = last">
+                                                        {{tags}}<span *ngIf="!last">,</span>
+                                                    </span>
+                                                </div>
+
+                                                <!-- <div class="">
+                                                    <span *ngFor="let tags of item.filter_tags ; let last = last" class="filter_tags ms-2">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                            xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0"
+                                                            id="Layer_1" width="12px" height="12px" viewBox="0 0 64 64"
+                                                            enable-background="new 0 0 64 64" xml:space="preserve" class="me-1">
+                                                            <path fill="#fff"
+                                                                d="M62.799,23.737c-0.47-1.399-1.681-2.419-3.139-2.642l-16.969-2.593L35.069,2.265  C34.419,0.881,33.03,0,31.504,0c-1.527,0-2.915,0.881-3.565,2.265l-7.623,16.238L3.347,21.096c-1.458,0.223-2.669,1.242-3.138,2.642  c-0.469,1.4-0.115,2.942,0.916,4l12.392,12.707l-2.935,17.977c-0.242,1.488,0.389,2.984,1.62,3.854  c1.23,0.87,2.854,0.958,4.177,0.228l15.126-8.365l15.126,8.365c0.597,0.33,1.254,0.492,1.908,0.492c0.796,0,1.592-0.242,2.269-0.72  c1.231-0.869,1.861-2.365,1.619-3.854l-2.935-17.977l12.393-12.707C62.914,26.68,63.268,25.138,62.799,23.737z" />
+                                                        </svg> {{tags}}
+                                                    </span>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-side">
+        <div class="side-nav">
+            <div class="menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 6.5H19V8H5V6.5Z" fill="#1F2328" />
+                    <path d="M5 16.5H19V18H5V16.5Z" fill="#1F2328" />
+                    <path d="M5 11.5H19V13H5V11.5Z" fill="#1F2328" />
+                </svg>
+            </div>
+        </div>
+        <div class="delivery-type">
+            <div class="d-flex justify-content-between">
+                <p>Pick-up order</p>
+                <a>Change</a>
+            </div>
+        </div>
+
+        <div class="choose-time">
+            <div class="">
+                <p> <svg xmlns="http://www.w3.org/2000/svg" fill="#525252" width="16px" height="16px"
+                        viewBox="0 0 56.00 56.00" class="me-2">
+
+                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                        <g id="SVGRepo_iconCarrier">
+
+                            <path
+                                d="M 27.9999 51.9063 C 41.0546 51.9063 51.9063 41.0781 51.9063 28 C 51.9063 14.9453 41.0312 4.0937 27.9765 4.0937 C 14.8983 4.0937 4.0937 14.9453 4.0937 28 C 4.0937 41.0781 14.9218 51.9063 27.9999 51.9063 Z M 15.7187 30.5312 C 14.8046 30.5312 14.1014 29.8281 14.1014 28.8906 C 14.1014 27.9766 14.8046 27.2734 15.7187 27.2734 L 26.3593 27.2734 L 26.3593 13.0937 C 26.3593 12.1797 27.0624 11.4766 27.9765 11.4766 C 28.8905 11.4766 29.6171 12.1797 29.6171 13.0937 L 29.6171 28.8906 C 29.6171 29.8281 28.8905 30.5312 27.9765 30.5312 Z" />
+
+                        </g>
+
+                    </svg>Choose a pick-up time</p>
+                <div class="d-flex"> <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px"
+                        viewBox="0 0 24 24" fill="none" class="me-2">
+                        <path
+                            d="M19 9L19 17C19 18.8856 19 19.8284 18.4142 20.4142C17.8284 21 16.8856 21 15 21L14 21L10 21L9 21C7.11438 21 6.17157 21 5.58579 20.4142C5 19.8284 5 18.8856 5 17L5 9"
+                            stroke="#525252" stroke-width="2" stroke-linejoin="round" />
+                        <path d="M3 11L7.5 7L10.6713 4.18109C11.429 3.50752 12.571 3.50752 13.3287 4.18109L16.5 7L21 11"
+                            stroke="#525252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M10 21V17C10 15.8954 10.8954 15 12 15V15C13.1046 15 14 15.8954 14 17V21"
+                            stroke="#525252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg> <span class="me-4"> Pick-up from 97 Swan Street Richmond </span></div>
+            </div>
+        </div>
+        <div class="cart-details" [hidden]="items_in_user_cart.length">
+            <p>
+                Your cart is empty. <br>
+                Add item to start you order.
+            </p>
+        </div>
+        <div class="cart__items pt-4 ">
+            <div class="pl-4 pr-4 d-content" [hidden]="!items_in_user_cart.length">
+                <div class="">
+                    <ul class="ps-0">
+                        <ng-container *ngFor="let product of items_in_user_cart;let product_index = index">
+                            <li class="previewcart-item d-flex w-100 order__list"
+                                *ngFor="let item of product.items;let item_index = index">
+                                <div class="previewcart-content w-100 items__list">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <h5 href="javascript:void(0)" style="margin-left: 0px;"
+                                                class="previewcart-product-name">{{item.item_name}} <span
+                                                    *ngIf="item?.dietary_tags?.length > 0" class="tag">(<span
+                                                        *ngFor="let tags of item.dietary_tags ; let last = last">{{get_store_tags(tags)}}<span
+                                                            *ngIf="!last">, </span>
+                                                    </span>)
+                                                </span></h5>
+                                            <p class="mb-0">{{item.details}}</p>
+                                            <div *ngIf="item.specifications.length > 0"
+                                                class="mb-2 specifications-description">
+                                                <p class="mb-0">
+                                                    {{'label-title.choose-your-add-ons' | translate}}
+                                                    <span
+                                                        *ngFor="let specificationGroup of item.specifications; last as isLast">
+                                                        <span
+                                                            *ngFor="let specification of specificationGroup.list">{{specification.name}}<span
+                                                                *ngIf="specification.quantity > 1">(x2)</span><span
+                                                                *ngIf="!isLast">,</span>&nbsp;</span>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="delete-icon col-2 text-end">
+                                            <a class="delete_btn"
+                                                (click)="onItemDelete(product_index, item ,item_index);"><img
+                                                    src="../../../assets/img/default-image/trash.png" width="20px"
+                                                    alt=""></a>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-end justify-content-between mt-2">
+                                        <div class="previewcart-product-qty product-qty d-flex align-items-end mr-auto">
+                                            <a href="javascript:void(0)" class="qty-btn qty-dec"
+                                                id="item-{{item_index}}-decrement-btn"
+                                                (click)="decreaseValue(product_index,item_index)">-</a>
+                                            <input type="text" class="form-control" value="{{item.quantity}}">
+                                            <a href="javascript:void(0)" class="qty-btn qty-inc"
+                                                id="item-{{item_index}}-increment-btn"
+                                                (click)="increaseValue(product_index,item_index)">+</a>
+                                        </div>
+                                        <h5 class="price mb-0">{{_cartService.currency}}
+                                            {{(item.total_item_price).toFixed(2)}}</h5>
+                                    </div>
+                                </div>
+                            </li>
+                        </ng-container>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="view__order">
+            <div class="view__btn">
+                <button class="btn__inner" (click)="onCheckout()"
+                    [disabled]="!items_in_user_cart.length">{{'button-title.go-to-checkout' | translate}}
+                    {{is_get_invoice
+                    ? ' - ' + _cartService.currency : ''}}
+                    {{(order_payment_details?.total_order_price)?.toFixed(2)}}</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<ng-template #addCartModel let-modal>
+    <div class="modal-header p-0 no-border position-relative">
+        <div class="product-img text-center w-100">
+            <img [src]="selected_item.image_url ? image_url + selected_item.image_url[0] : DEFAULT_IMAGE.DEFAULT_ITEM"
+                (error)="$any($event.target).src=DEFAULT_IMAGE.DEFAULT_ITEM" alt="">
+        </div>
+        <div class="close-btn" (click)="addCartRef.close()">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
+    </div>
+    <div class="modal-body py-3 px-4 pb-0">
+        <div class="pop-up-content-wrap">
+
+            <div class="dropdown-title">
+                <h4>{{ selected_item.name }} <span *ngIf="selected_item?.dietary_tags?.length > 0" class="tag">(<span
+                            *ngFor="let tags of selected_item.dietary_tags ; let last = last">{{tags}}<span
+                                *ngIf="!last">, </span>
+                        </span>)
+                    </span></h4>
+                <div class="pro-dec">
+                    <p>{{ selected_item.details }}</p>
+                </div>
+            </div>
+            <div class="dropdown-content">
+
+                <div *ngFor="let specification of selected_item.specifications; let i = index"
+                    id="specification{{specification.unique_id}}" class="mt-2">
+                    <ng-container *ngIf="!specification.is_associated">
+                        <div class="product-options-block" *ngIf="specification.type === 1">
+                            <div class="subtitle-wrp d-flex align-item-top">
+                                <div class="choose-item-wrp">
+                                    <p>{{specification.name}} <span class="required-star text-danger"
+                                            *ngIf="specification.is_required"> *</span></p>
+                                    <div class="choose">{{'Must Choose 1' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="options-list-block">
+                                <form action="">
+                                    <div class="options-list-wrp d-flex align-item-center justify-content-between"
+                                        *ngFor="let spec of specification.list; let spec_index = index">
+                                        <label for="opt{{spec_index}}{{i}}" class="radio">
+                                            <input type="radio" [checked]="spec.is_default_selected"
+                                                id="opt{{spec_index}}{{i}}"
+                                                (change)="changeradio($event, i, spec_index)" name="opt{{i}}"
+                                                class="hidden" />
+                                            <span class="label"></span>{{spec.name}}
+                                        </label>
+                                        <div class="options-price">
+                                            <span *ngIf="spec.price > 0">{{store?.country_details ?
+                                                store?.country_details.currency_sign : currencySign}}
+                                                {{(spec.price)?.toFixed(2)}}</span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="product-options-block" *ngIf="specification.type === 2">
+                            <div class="subtitle-wrp d-flex align-item-top">
+                                <div class="choose-item-wrp">
+                                    <p>{{specification.name}} <span class="required-star text-danger"
+                                            *ngIf="specification.is_required"> *</span></p>
+                                    <div class="choose">
+                                        <span
+                                            *ngIf="specification.range !== 0 || specification.max_range !== 0">{{'label-title.choose'
+                                            | translate}} {{specification.range}}</span>
+                                        <span *ngIf="specification.max_range !== 0">&nbsp;{{'label-title.to' |
+                                            translate}}&nbsp;{{specification.max_range}}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="options-list-block">
+                                <form action="">
+                                    <div class="options-list-wrp d-flex align-item-center justify-content-between"
+                                        *ngFor="let spec of specification.list; let spec_index = index">
+                                        <label class="d-flex checkbox align-item-center flex-grow-1">
+                                            <input id="item0-{{i}}-spec-{{spec_index}}" type="checkbox"
+                                                [checked]="spec.is_default_selected"
+                                                *ngIf="specification.type==2 && (specification.max_range == 0 || specification.max_range == null)"
+                                                [disabled]="specification.default_selected_count == specification.range && specification.range !== 0 && !spec.is_default_selected"
+                                                (change)="changecheckbox($event, i, spec_index)"
+                                                class="option-input checkbox rtl-checkbox me-0">
+                                            <input id="item1-{{i}}-spec-{{spec_index}}" type="checkbox"
+                                                [checked]="spec.is_default_selected"
+                                                *ngIf="specification.type==2 && specification.max_range != 0 && specification.max_range != null"
+                                                [disabled]="specification.default_selected_count == specification.max_range && !spec.is_default_selected"
+                                                (change)="changecheckbox($event, i, spec_index)"
+                                                class="option-input checkbox rtl-checkbox me-0">
+                                            <span class="label"></span>{{spec.name}}
+                                        </label>
+                                        <div class="product-qty d-flex align-item-center mb-1 flex-shrink-0 rtl-product-qty"
+                                            style="font-size: 70%;"
+                                            *ngIf="spec.is_default_selected && specification.user_can_add_specification_quantity">
+                                            <a href="javascript:void(0)" class="qty-btn qty-dec"
+                                                id="item-{{i}}-spec-{{spec_index}}-decrement-btn"
+                                                (click)="onDecreaseQty( i, spec_index)">-</a>
+                                            <input type="text" class="form-control" style="font-size: 88%;"
+                                                [value]="selected_item.specifications[i].list[spec_index].quantity"
+                                                readonly>
+                                            <a href="javascript:void(0)" class="qty-btn qty-inc"
+                                                id="item-{{i}}-spec-{{spec_index}}-increment-btn"
+                                                (click)="onIncreaseQty( i, spec_index)">+</a>
+                                        </div>
+                                        <div class="options-price flex-shrink-0">
+                                            <span *ngIf="spec.price > 0">{{store?.country_details ?
+                                                store?.country_details.currency_sign : currencySign}}
+                                                {{(spec.price)?.toFixed(2)}}</span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="note w-100 mb-2">
+            <input type="text" class="add-note w-100" [(ngModel)]="note_for_item" placeholder="Add Note">
+        </div>
+        <div class="popup-footer-wrp w-100 d-flex align-item-center">
+            <div class="product-qty d-flex align-item-center">
+                <a id="selected-item-qty-decrease-btn" href="javascript:void(0)" class="qty-btn qty-dec"
+                    (click)="decrease_qty()">-</a>
+                <input id="selected-item-qty" type="text" class="form-control" value="{{qty}}" readonly>
+                <a id="selected-item-qty-increase-btn" href="javascript:void(0)" class="qty-btn qty-inc"
+                    (click)="incerase_qty()">+</a>
+            </div>
+            <div class="add-to-cart-btn w-100">
+                <button id="add-to-order-btn" class="primary-btn w-100"
+                    [disabled]="required_count !== required_temp_count"
+                    (click)="check_required_options()">{{'label-title.yes-plz' | translate}} -
+                    {{store?.country_details ?
+                    store?.country_details.currency_sign : currencySign}}{{total?.toFixed(2)}}</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

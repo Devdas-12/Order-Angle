@@ -1,0 +1,246 @@
+<app-navbar [checkout]="true" (backClick)="onBack()"></app-navbar>
+
+<div class="checkout-container d-flex flex-column justify-content-between mt-4">
+    <div>
+        <div class="user__info" *ngIf="!is_ordered_once">
+            <div class="container">
+                <p class="mb-0">{{'label-title.need-a-receipt' | translate}}</p>
+                <p class="mb-0">{{'label-title.fill-in-your-name-and-email' | translate}}</p>
+                <form class="info-form mt-2" [formGroup]="checkOutForm">
+                    <div class="form-group mb-3">
+                        <input type="text" class="form-control mb-0" formControlName="name" placeholder="Name">
+                        <div class="required text-danger"
+                            *ngIf="checkOutForm.get('name')?.errors?.required && checkOutForm.get('name')?.touched">
+                            * {{'validation-title.name-is-required' | translate}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" formControlName="email" placeholder="Email">
+                        <div class="required text-danger"
+                            *ngIf="checkOutForm.get('email')?.errors?.email && checkOutForm.get('email')?.touched">
+                            * {{'validation-title.email-is-invalid' | translate}}
+                        </div>
+                    </div>
+                    <div class="form-group mb-2">
+                        <div class="d-flex align-items-center">
+                            <input type="checkbox" id="check1" class="option-input" formControlName="is_eligable">
+                            <label for="check1">{{'label-title.im-over-18' | translate}}</label>
+                        </div>
+                        <div class="required text-danger d-block mt-1"
+                            *ngIf="!checkOutForm.get('is_eligable')?.value && checkOutForm.get('is_eligable')?.touched ">
+                            * {{'validation-title.this-field-is-required' | translate}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="d-flex align-items-start">
+                            <input type="checkbox" id="check2" class="option-input" formControlName="is_marketing">
+                            <label for="check2"> {{'label-title.marketing-option' | translate}} <a
+                                    href="https://api.deliveryangel.com/agreements/Delivery_Angel_Privacy_Policy.html"
+                                    target="_blank">{{'label-title.privacy-policy' | translate}}</a> </label>
+                        </div>
+                        <div class="required text-danger d-block mt-1"
+                            *ngIf="checkOutForm.get('email')?.value != '' && checkOutForm.get('is_marketing')?.touched && checkOutForm.get('is_marketing')?.value != true">
+                            * {{'validation-title.this-field-is-required' | translate}}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- <hr> -->
+        <div class="payment_details">
+            <div class="container">
+                <div class="payments">
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-0">{{'label-title.how-would-you-like-to-pay' | translate}}</p>
+                        <div>
+                            <a class="add_btn" (click)="addCard()">{{'button-title.add' | translate | uppercase}}</a>
+                        </div>
+                    </div>
+                    <div class="px-3">
+                        <div class="row card-list">
+                            <div class="col-12 card" *ngFor="let card of cards">
+                                <div class="d-flex align-items-center" [ngClass]="card.is_default ? 'active' : ''"
+                                    (click)="selectDefault(card)">
+                                    <div class="card-icon me-3">
+                                        <img src="../../../assets/img/card-svg/credit-card.svg" alt="">
+                                    </div>
+                                    <div>
+                                        <p class="card-number mb-0">****{{card.last_four}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="col-12 card ">
+                                <div class="d-flex align-items-center active">
+                                    <div class="card-icon me-3">
+                                        <img src="../../../assets/img/card-svg/applepay.svg" alt="">
+                                    </div>
+                                    <div>
+                                        <p class="card-number mb-0">****7319</p>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="discription ps-2">
+                        <p>{{'label-title.your-order-will-appear-on-your-bank' | translate}} <br> {{'label-title.statement-as' | translate}}: {{store?.entity_name}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="invoice py-3">
+        <div class="container">
+            <div class="invoice-content">
+                <div class="px-2" *ngIf="!invoice_failed">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="mb-0">{{'label-title.total-food-drinks' | translate}}</p>
+                        <p class="mb-0">{{_cartService.currency}}{{(order_payment?.total_cart_price).toFixed(2)}}</p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="mb-0 fees" (click)="onFees()">{{'label-title.fees' | translate}} <span>?</span></p>
+                        <p class="mb-0">
+                            {{_cartService.currency}}{{(order_payment?.total_customer_service_fee).toFixed(2)}}</p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="mb-0 fees">{{'label-title.angle-saving' | translate}} {{order_payment?.angel_saving_percentage}}% </p>
+                        <p class="mb-0">
+                            - {{_cartService.currency}}{{(order_payment?.angel_saving).toFixed(2)}}</p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center" *ngIf="helper.tip_amount">
+                        <p class="mb-0 fees">{{'label-title.driver-tip' | translate}} </p>
+                        <p class="mb-0">
+                             {{_cartService.currency}}{{(helper.tip_amount).toFixed(2)}}</p>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="mb-0 total">{{'label-title.total' | translate}}</p>
+                        <p class="mb-0 total">{{_cartService.currency}}{{(order_payment?.user_pay_payment).toFixed(2)}}
+                        </p>
+                    </div>
+                    <div class="terms">
+                        <p>{{'label-title.by-continuing-you-agree-with-our' | translate}} <br>
+                            <a href="https://api.deliveryangel.com/agreements/Delivery_Angel_TC_s.html"
+                                target="_blank">{{'label-title.terms-and-conditions' | translate}}</a>  {{'label-title.and' | translate | lowercase}} <a
+                                href="https://api.deliveryangel.com/agreements/Delivery_Angel_Privacy_Policy.html"
+                                target="_blank">{{'label-title.privacy-policy' | translate}}</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="place__order">
+                    <a class="place__btn" (click)="onPay()">{{'label-title.all-good' | translate}}:
+                        {{_cartService.currency}}{{(order_payment?.user_pay_payment).toFixed(2)}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #feesModel let-modal>
+    <div class="modal-header no-border">
+        <div class="d-flex align-items-center justify-content-between w-100" style="padding: 10px 0px 0px 0px;">
+            <div class="modal-heading font-weigth-bold">
+                {{'label-title.what-are-the-fees' | translate}}
+            </div>
+            <div class="modalclose" (click)="feesModelRef.close()">
+                <i class="fa-solid fa-xmark text-dark" style="font-size: 14px;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body mb-4 pt-0">
+        <div class="fees">
+            <p>{{'label-title.fees-description' | translate}}</p>
+            <p class="mb-4">{{'label-title.see-receipt-for-details' | translate}}</p>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #addCardModel let-modal>
+    <div class="modal-header no-border">
+        <div class="d-flex align-items-center justify-content-between w-100" style="padding: 10px 0px 0px 6px;">
+            <div class="modal-heading font-weigth-bold">
+                {{'label-title.add-payment-method' | translate}}
+            </div>
+            <div class="modalclose" (click)="addCardModalRef.close()">
+                <i class="fa-solid fa-xmark" style="font-size: 14px;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body mb-4 pt-0">
+        <div class="add__card">
+            <div id="express-checkout-element">
+
+            </div>
+            <div class="payment-type">
+                <!-- <div class="apple__pay">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" width="40px" height="40px"
+                        viewBox="0 -34.55 120.3 120.3">
+                        <path
+                            d="M22.8 6.6c1.4-1.8 2.4-4.2 2.1-6.6-2.1.1-4.6 1.4-6.1 3.1-1.3 1.5-2.5 4-2.2 6.3 2.4.3 4.7-1 6.2-2.8M24.9 10c-3.4-.2-6.3 1.9-7.9 1.9-1.6 0-4.1-1.8-6.8-1.8-3.5.1-6.7 2-8.5 5.2-3.6 6.3-1 15.6 2.6 20.7 1.7 2.5 3.8 5.3 6.5 5.2 2.6-.1 3.6-1.7 6.7-1.7s4 1.7 6.8 1.6 4.6-2.5 6.3-5.1c2-2.9 2.8-5.7 2.8-5.8-.1-.1-5.5-2.1-5.5-8.3-.1-5.2 4.2-7.7 4.4-7.8-2.3-3.6-6.1-4-7.4-4.1" />
+                        <g>
+                            <path
+                                d="M54.3 2.9c7.4 0 12.5 5.1 12.5 12.4 0 7.4-5.2 12.5-12.7 12.5H46v12.9h-5.9V2.9h14.2zm-8.3 20h6.7c5.1 0 8-2.8 8-7.5 0-4.8-2.9-7.5-8-7.5h-6.8v15h.1zM68.3 33c0-4.8 3.7-7.8 10.3-8.2l7.6-.4v-2.1c0-3.1-2.1-4.9-5.5-4.9-3.3 0-5.3 1.6-5.8 4h-5.4c.3-5 4.6-8.7 11.4-8.7 6.7 0 11 3.5 11 9.1v19h-5.4v-4.5h-.1c-1.6 3.1-5.1 5-8.7 5-5.6 0-9.4-3.4-9.4-8.3zm17.9-2.5v-2.2l-6.8.4c-3.4.2-5.3 1.7-5.3 4.1 0 2.4 2 4 5 4 4 0 7.1-2.7 7.1-6.3zM96.9 51v-4.6c.4.1 1.4.1 1.8.1 2.6 0 4-1.1 4.9-3.9 0-.1.5-1.7.5-1.7l-10-27.6h6.1l7 22.5h.1l7-22.5h6L110 42.4c-2.4 6.7-5.1 8.8-10.8 8.8-.4-.1-1.8-.1-2.3-.2z" />
+                        </g>
+                    </svg>
+                </div> -->
+                <div id="google-pay-button"></div>
+                <div #googlePayButtonContainer></div>
+                <!-- <div class="google__pay">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" viewBox="0 0 437 174">
+                        <g fill="none" fill-rule="nonzero">
+                            <path fill="#fff"
+                                d="M207.2 84.6v50.8h-16.1V10h42.7c10.3-.2 20.2 3.7 27.7 10.9 7.5 6.7 11.7 16.4 11.5 26.4.2 10.1-4 19.8-11.5 26.6-7.5 7.1-16.7 10.7-27.6 10.7h-26.7zm0-59.2v43.8h27c6 .2 11.8-2.2 15.9-6.5 8.5-8.2 8.6-21.7.4-30.2l-.4-.4c-4.1-4.4-9.9-6.8-15.9-6.6l-27-.1zM310.1 46.8c11.9 0 21.3 3.2 28.2 9.5 6.9 6.4 10.3 15.1 10.3 26.2v52.8h-15.4v-11.9h-.7c-6.7 9.8-15.5 14.7-26.6 14.7-9.4 0-17.4-2.8-23.7-8.4-6.2-5.2-9.7-12.9-9.5-21 0-8.9 3.4-15.9 10.1-21.2 6.7-5.3 15.7-7.9 26.9-7.9 9.6 0 17.4 1.8 23.6 5.2v-3.7c0-5.5-2.4-10.7-6.6-14.2-4.3-3.8-9.8-5.9-15.5-5.9-9 0-16.1 3.8-21.4 11.4l-14.2-8.9c7.7-11.1 19.2-16.7 34.5-16.7zm-20.8 62.3c0 4.2 2 8.1 5.3 10.5 3.6 2.8 8 4.3 12.5 4.2 6.8 0 13.3-2.7 18.1-7.5 5.3-5 8-10.9 8-17.7-5-4-12-6-21-6-6.5 0-12 1.6-16.4 4.7-4.3 3.2-6.5 7.1-6.5 11.8zM437 49.6l-53.8 123.6h-16.6l20-43.2-35.4-80.3h17.5l25.5 61.6h.4l24.9-61.6z" />
+                            <path fill="#4285F4"
+                                d="M142.1 73.6c0-4.9-.4-9.8-1.2-14.6H73v27.7h38.9c-1.6 8.9-6.8 16.9-14.4 21.9v18h23.2c13.6-12.5 21.4-31 21.4-53z" />
+                            <path fill="#34A853"
+                                d="M73 144c19.4 0 35.8-6.4 47.7-17.4l-23.2-18c-6.5 4.4-14.8 6.9-24.5 6.9-18.8 0-34.7-12.7-40.4-29.7H8.7v18.6C20.9 128.6 45.8 144 73 144z" />
+                            <path fill="#FBBC04"
+                                d="M32.6 85.8c-3-8.9-3-18.6 0-27.6V39.7H8.7a71.39 71.39 0 0 0 0 64.6l23.9-18.5z" />
+                            <path fill="#EA4335"
+                                d="M73 28.5c10.3-.2 20.2 3.7 27.6 10.8l20.5-20.5C108.1 6.5 90.9-.2 73 0 45.8 0 20.9 15.4 8.7 39.7l23.9 18.6C38.3 41.2 54.2 28.5 73 28.5z" />
+                        </g>
+                    </svg>
+                </div> -->
+            </div>
+            <div class="payment-details px-3">
+                <div class="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="" id="cc-holder">
+                        <label for="card-holder">{{'label-title.card-holder-name' | translate}}</label>
+                    </div>
+                </div>
+                <div class="form">
+                    <div class="form-group">
+                        <!-- <input type="text" class="form-control" name="" id="cc-number"> -->
+                        <div id="cc-number"></div>
+                        <label for="card-number">{{'label-title.credit-card-number' | translate}}</label>
+                    </div>
+                </div>
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-6 form">
+                        <div class="form-group">
+                            <!-- <input type="text" class="form-control" name="" id="cc-expiry"> -->
+                            <div id="cc-expiry"></div>
+                            <label for="month">{{'label-title.mm-yy' | translate}}</label>
+                        </div>
+                    </div>
+                    <!-- <div class="col-4 form">
+                        <div class="form-group">
+                            <div id="cc-expiry"></div>
+                            <label for="year">YY</label>
+                        </div>
+                    </div> -->
+                    <div class="col-6 form">
+                        <div class="form-group">
+                            <!-- <input type="text" class="form-control" name="" id="cc-cvc"> -->
+                            <div id="cc-cvc"></div>
+                            <label for="cvv">{{'label-title.cvv' | translate}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-buttons mt-3 mb-1">
+                <a class="add-btn" (click)="saveCard()">{{'label-title.add-card' | translate}}</a>
+            </div>
+        </div>
+    </div>
+</ng-template>

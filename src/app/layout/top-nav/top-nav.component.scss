@@ -1,0 +1,38 @@
+header{
+    top: 0;
+    box-shadow: 0px 1px 7px #80808045, 0px -3px 3px #80808045;
+}
+
+.btn-custom {
+    line-height: 16px;
+    border-width: 1px;
+    border-color: transparent;
+    min-width: 80px;
+    // padding: 10px 20px;
+}
+
+.btn-custom.btn-primary {
+    &:hover {
+        border-color: #eb3349;
+    }
+}
+
+.btn-secondary {
+    border-color: #eb3349;
+    background: transparent;
+    color: #eb3349;
+
+    &:hover {
+        border-color: transparent;
+        background: linear-gradient(to right, #eb3349, #f45c43);
+        color: white;
+        opacity: 1;
+    }
+}
+
+.truncate-span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 62px;
+}

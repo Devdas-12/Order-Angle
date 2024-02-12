@@ -1,0 +1,130 @@
+<ng-template #template let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">{{'label-title.account' | translate}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body" *ngIf="isVerify">
+        <div class="menu-items">
+            <ul>
+                <li>
+                    <a><i class="fa-solid fa-credit-card"></i> {{'label-title.payments' | translate}}</a>
+                </li>
+                <li>
+                    <a><i class="fa-solid fa-bag-shopping"></i> {{'label-title.orders' | translate}}</a>
+                </li>
+                <li>
+                    <a><i class="fa-solid fa-hand"></i> {{'label-title.help' | translate}}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="store__address mt-3">
+            <div class="store__logo">
+                <img src="../../../../assets/img/logo.png" alt="">
+            </div>
+            <div class="address">
+                <h6>{{store_details.name}}</h6>
+                <p class="mb-1">
+                    {{store_details.address}}
+                </p>
+                <p class="mb-1">{{store_details.country_phone_code}} {{store_details.phone}}</p>
+                <p>{{store_details.email}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body" *ngIf="!isVerify">
+        <div class="mobile-verification d-flex flex-column align-items-center justify-content-center">
+            <div class="verification-img">
+                <img src="../../../../assets/img/default-image/OTP.png" alt="">
+            </div>
+            <div class="mobile">
+                <h5>{{'label-title.verify-your-mobile-number' | translate}}</h5>
+                <p>{{'label-title.to-verify-we-send-you-a-six-digit-code-vi-sms' | translate}}</p>
+
+                <div class="form__modal mb-3">
+                    <div class="input-group" ngbDropdown>
+                        <span class="input-group-text" id="basic-addon1" ngbDropdownToggle><img
+                                [src]="imageUrl + selectedCountry?.country_flag" alt=""> <i
+                                class="fa-solid fa-angle-down"></i> {{selectedCountry?.country_phone_code}} </span>
+                        <input type="text" class="form-control" placeholder="Your mobile number"
+                            (keypress)="helper.phone_number_validation($event);validationCheck()" aria-label="Username"
+                            aria-describedby="basic-addon1" [(ngModel)]="phoneNumber" [maxlength]="10">
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <div ngbDropdownItem *ngFor="let country of countryList" (click)="onSelect(country)">
+                                <img [src]="imageUrl + country.country_flag" class="me-2" alt=""> <span
+                                    class="me-2">{{country.country_phone_code}}</span>
+                                <span>{{country.country_name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="required text-danger" *ngIf="phoneEmpty">
+                        * {{'validation-title.phone-is-required' | translate}}
+                    </div>
+                    <div class="required text-danger" *ngIf="phoneMinLength">
+                        * {{'validation-title.phone-is-too-short' | translate}}
+                    </div>
+                </div>
+                <!-- <div class="h-captcha" data-sitekey="your_site_key"></div> -->
+                <!-- <div id="html_element"></div> -->
+                
+                <div class="contiue_btn">
+                    <a class="co_btn" (click)="onVerify()" id="submit_btn"> {{'button-title.continue' | translate}} </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" *ngIf="isVerify">
+        <div class="w-100 d-flex justify-content-center">
+            <a class="me-1">{{'label-title.privacy' | translate}}</a>
+            <a class="ms-1">{{'label-title.support' | translate}}</a>
+        </div>
+    </div>
+</ng-template>
+
+<!-- <ng-template #otpverify let-modal>
+    <div class="modal-body">
+        <h4>Enter OTP</h4>
+        <div class="d-flex align-items-center justify-content-center py-5">
+            <div class="otp-field pb-3">
+                <input type="text" maxlength="1" />
+                <input type="text" maxlength="1" />
+                <input class="space" type="text" maxlength="1" />
+                <input type="text" maxlength="1" />
+                <input type="text" maxlength="1" />
+                <input type="text" maxlength="1" />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn_confirm" (click)="submit()">Verify</button>
+    </div>
+</ng-template> -->
+
+
+<ng-template #otpverify let-modal>
+    <div class="modal-header">
+        <h6 class="mb-0">{{'label-title.enter-otp' | translate}}</h6>
+        <div class="modalclose" (click)="otpverifyRef.close()">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+    </div>
+    <div class="modal-body">
+        <!-- {{temp_otp?.otp}} -->
+        <div class="d-flex align-items-center justify-content-center py-4">
+            <div class="otp-field pb-3">
+                <input type="number" maxlength="1" />
+                <input type="number" maxlength="1" />
+                <input class="space" type="number" maxlength="1" />
+                <input type="number" maxlength="1" />
+                <input type="number" maxlength="1" />
+                <input type="number" maxlength="1" />
+            </div>
+        </div>
+        <div class="btn-groups">
+            <div class="row">
+                <div class="col-12 text-end ">
+                    <a class="btn_confirm" (click)="submit()">{{'button-title.verify' | translate}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

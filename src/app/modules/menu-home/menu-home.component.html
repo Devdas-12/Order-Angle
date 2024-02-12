@@ -1,0 +1,255 @@
+<app-navbar (onOpen)="menuOpen()" (onFilter)="onFilter()" [(user)]="search_value" [isMenuHome]="true"></app-navbar>
+
+<div class="menu__home">
+    <div class="tag_filter_sticky">
+        <div class="container">
+            <div class="tag_filter d-flex" id="tags" scrollCenter [scrollCenterSelector]="'#tags'">
+                <div class="filter_list" *ngFor="let product of filter_items; let pr_index = index">
+                    <!-- <input type="checkbox" (click)="onTagFilter(tag)" #checked class="option-input checkbox" hidden /> -->
+                    <div class="type c-pointer filter_btn" *ngIf="product.items.length > 0"
+                        [ngClass]="product._id._id == currentSection ? 'tab-active' : '' "
+                        (click)="onItemClick(product._id , 'vertical')" id="{{product._id.unique_id}}">
+                        <a>{{product._id.name}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- *ngIf="filtered_tags?.length > 0 ? doesItemContainTags(item , filtered_tags) : true" -->
+    <!-- *ngIf="(is_table_booking && item.is_dine_in_type_order) || (is_pickup && item.is_pickup_type_order)" -->
+
+    <div class="container">
+
+        <div class="items__list" scrollSpy [spiedTags]="['DIV']" (sectionChange)="onSectionChange($event)">
+            <div *ngFor="let product of filter_items; let i = index" [id]="product._id._id">
+                <div class="main__item"
+                    *ngIf="((product.items | searchpipe : search_value : ['name']).length > 0)"  >
+                    <div class="name {{product._id.unique_id}}">
+                        <p>{{product._id.name}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div *ngFor="let item of product.items | searchpipe : search_value : ['name']" class="col-md-6">
+                        <div class="sub__items" (click)="onProductClick(item)"
+                            *ngIf="filtered_tags?.length > 0 ? doesItemContainTags(item , filtered_tags) : true">
+                            <div class="row" *ngIf="(product.items | searchpipe : search_value : ['name']).length > 0">
+                                <div class="item__details col-8">
+                                    <h5>{{item.name}} <span *ngIf="item?.dietary_tags?.length > 0" class="tag">(<span
+                                                *ngFor="let tags of item.dietary_tags ; let last = last">{{tags}}<span
+                                                    *ngIf="!last">, </span>
+                                            </span>)
+                                        </span></h5>
+                                    <p class="details">{{item.details}}</p>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <p class="price"> {{product_data.currency}}{{ is_table_booking ?
+                                            item.is_dine_in_price : item.is_pickup_price }} </p>
+                                        <!-- <div class="tags" *ngIf="item?.dietary_tags?.length > 0">
+                                            <span *ngFor="let tags of item.dietary_tags ; let last = last">
+                                                {{tags}} <span *ngIf="!last">,</span>
+                                            </span>
+                                        </div> -->
+                                    </div>
+                                </div>
+                                <div class="item__image col-4" *ngIf="item.image_url.length > 0">
+                                    <img [src]="item.image_url ? image_url + item.image_url[0] : DEFAULT_IMAGE.DEFAULT_ITEM"
+                                        (error)="$any($event.target).src=DEFAULT_IMAGE.DEFAULT_ITEM" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div *ngIf="filtered_tags?.length > 0 ? !doesItemContainTags(item , filtered_tags) : false">
+                            No Items Found
+                        </div> -->
+                    </div>
+                    <!-- <div *ngIf="filterProduct(product).items.length == 0">
+                        <p class="text-center py-3">No Items Found</p>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="view__order" *ngIf="products">
+        <div class="view__btn">
+            <a class="btn__inner" routerLink="/cart">{{'button-title.view-order' | translate}}</a>
+        </div>
+    </div>
+</div>
+
+<ng-template #filtermenumodel let-modal>
+    <div class="modal-header">
+        <div class="d-flex align-items-center justify-content-between w-100" style="padding: 10px 0px 0px 0px;">
+            <div class="modal-heading font-weight-bold" style="font-weight: 500;">
+                {{'label-title.filter-menu-by' | translate}}
+            </div>
+            <div class="modalclose" (click)="filterRef.close()">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body mb-4 pt-2">
+        <div class="filter__menu pb-4">
+            <div class="form-group d-flex align-items-center justify-content-between py-1"
+                *ngFor="let tag of famous_products_tags">
+                <label for="Radio1">
+                    {{tag.name}}
+                </label>
+                <input class="radio-box" type="radio"
+                    [checked]="tag.short_name ? filter_name.includes(tag.short_name) : filter_name.includes(tag.name) "
+                    id="tag">
+                <div class="check" (click)="onTagFilter(tag)"></div>
+            </div>
+            <div *ngIf="famous_products_tags?.length == 0" class="text-center">
+                {{'label-title.no-tags-found' | translate}}
+            </div>
+        </div>
+        <div class="submit__btn">
+            <div class="d-flex justify-content-center w-100 confirm">
+                <a class="confirm__btn" (click)="confirmFilter()">{{'button-title.filter' | translate}}</a>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #addCartModel let-modal>
+    <div class="modal-header p-0 no-border position-relative">
+        <div class="product-img text-center w-100">
+            <img [src]="selected_item.image_url ? image_url + selected_item.image_url[0] : DEFAULT_IMAGE.DEFAULT_ITEM"
+                (error)="$any($event.target).src=DEFAULT_IMAGE.DEFAULT_ITEM" alt="">
+        </div>
+        <div class="close-btn" (click)="addCartRef.close();is_readonly = true">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
+    </div>
+    <div class="modal-body py-3 px-4">
+        <div class="pop-up-content-wrap">
+
+            <div class="dropdown-title">
+                <h4>{{ selected_item.name }} <span *ngIf="selected_item?.dietary_tags?.length > 0" class="tag">(<span
+                            *ngFor="let tags of selected_item.dietary_tags ; let last = last">{{tags}}<span
+                                *ngIf="!last">, </span>
+                        </span>)
+                    </span></h4>
+            </div>
+            <div class="dropdown-content">
+                <div class="pro-dec">
+                    <p>{{ selected_item.details }}</p>
+                </div>
+
+                <div *ngFor="let specification of selected_item.specifications; let i = index"
+                    id="specification{{specification.unique_id}}" class="mt-2">
+                    <ng-container *ngIf="!specification.is_associated">
+                        <div class="product-options-block" *ngIf="specification.type === 1">
+                            <div class="subtitle-wrp d-flex align-item-top">
+                                <div class="choose-item-wrp">
+                                    <p>{{specification.name}} <span class="required-star text-danger"
+                                            *ngIf="specification.is_required"> *</span></p>
+                                    <div class="choose">{{'Must Choose 1' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="options-list-block">
+                                <form action="">
+                                    <div class="options-list-wrp d-flex align-item-center justify-content-between"
+                                        *ngFor="let spec of specification.list; let spec_index = index">
+                                        <label for="opt{{spec_index}}{{i}}" class="radio"
+                                            *ngIf="spec?.is_visible_in_store">
+                                            <input type="radio" [checked]="spec.is_default_selected"
+                                                id="opt{{spec_index}}{{i}}"
+                                                (change)="changeradio($event, i, spec_index)" name="opt{{i}}"
+                                                class="hidden" />
+                                            <span class="label"></span>{{spec.name}}
+                                        </label>
+                                        <div class="options-price" *ngIf="spec?.is_visible_in_store">
+                                            <span *ngIf="spec.price > 0">{{store?.country_details ?
+                                                store?.country_details.currency_sign : currencySign}}
+                                                {{(spec.price)?.toFixed(2)}}</span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="product-options-block" *ngIf="specification.type === 2">
+                            <div class="subtitle-wrp d-flex align-item-top">
+                                <div class="choose-item-wrp">
+                                    <p>{{specification.name}} <span class="required-star text-danger"
+                                            *ngIf="specification.is_required"> *</span></p>
+                                    <div class="choose">
+                                        <span
+                                            *ngIf="specification.range !== 0 || specification.max_range !== 0">{{'label-title.choose'
+                                            | translate}} {{specification.range}}</span>
+                                        <span *ngIf="specification.max_range !== 0">&nbsp;{{'label-title.to' |
+                                            translate}}&nbsp;{{specification.max_range}}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="options-list-block">
+                                <form action="">
+                                    <div class="options-list-wrp d-flex align-item-center justify-content-between"
+                                        *ngFor="let spec of specification.list; let spec_index = index">
+                                        <label class="d-flex checkbox align-item-center flex-grow-1"
+                                            *ngIf="spec?.is_visible_in_store">
+                                            <input id="item0-{{i}}-spec-{{spec_index}}" type="checkbox"
+                                                [checked]="spec.is_default_selected"
+                                                *ngIf="specification.type==2 && (specification.max_range == 0 || specification.max_range == null)"
+                                                [disabled]="specification.default_selected_count == specification.range && specification.range !== 0 && !spec.is_default_selected"
+                                                (change)="changecheckbox($event, i, spec_index)"
+                                                class="option-input checkbox rtl-checkbox me-0">
+                                            <input id="item1-{{i}}-spec-{{spec_index}}" type="checkbox"
+                                                [checked]="spec.is_default_selected"
+                                                *ngIf="specification.type==2 && specification.max_range != 0 && specification.max_range != null"
+                                                [disabled]="specification.default_selected_count == specification.max_range && !spec.is_default_selected"
+                                                (change)="changecheckbox($event, i, spec_index)"
+                                                class="option-input checkbox rtl-checkbox me-0">
+                                            <span class="label"></span>{{spec.name}}
+                                        </label>
+                                        <div class="product-qty d-flex align-item-center mb-1 flex-shrink-0 rtl-product-qty"
+                                            style="font-size: 70%;"
+                                            *ngIf="spec.is_default_selected && specification.user_can_add_specification_quantity">
+                                            <a href="javascript:void(0)" class="qty-btn qty-dec"
+                                                id="item-{{i}}-spec-{{spec_index}}-decrement-btn"
+                                                (click)="onDecreaseQty( i, spec_index)">-</a>
+                                            <input type="text" class="form-control" style="font-size: 88%;"
+                                                [value]="selected_item.specifications[i].list[spec_index].quantity"
+                                                readonly>
+                                            <a href="javascript:void(0)" class="qty-btn qty-inc"
+                                                id="item-{{i}}-spec-{{spec_index}}-increment-btn"
+                                                (click)="onIncreaseQty( i, spec_index)">+</a>
+                                        </div>
+                                        <div class="options-price flex-shrink-0" *ngIf="spec?.is_visible_in_store">
+                                            <span *ngIf="spec.price > 0">{{store?.country_details ?
+                                                store?.country_details.currency_sign : currencySign}}
+                                                {{(spec.price)?.toFixed(2)}}</span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="note w-100 mb-2">
+            <input type="text" class="add-note w-100" id="inputField" [(ngModel)]="note_for_item" placeholder="Add Note"
+                (click)="is_readonly = false" [readonly]="is_readonly">
+        </div>
+        <div class="popup-footer-wrp w-100 d-flex align-item-center">
+            <div class="product-qty d-flex align-item-center">
+                <a id="selected-item-qty-decrease-btn" href="javascript:void(0)" class="qty-btn qty-dec"
+                    (click)="decrease_qty()">-</a>
+                <input id="selected-item-qty" type="text" class="form-control" value="{{qty}}" readonly>
+                <a id="selected-item-qty-increase-btn" href="javascript:void(0)" class="qty-btn qty-inc"
+                    (click)="incerase_qty()">+</a>
+            </div>
+            <div class="add-to-cart-btn w-100">
+                <button id="add-to-order-btn" class="primary-btn w-100"
+                    [disabled]="required_count !== required_temp_count || total == 0"
+                    (click)="check_required_options()">{{'label-title.yes-plz' | translate}} -
+                    {{store?.country_details ?
+                    store?.country_details.currency_sign : currencySign}}{{total?.toFixed(2)}}</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

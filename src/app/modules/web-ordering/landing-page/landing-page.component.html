@@ -1,0 +1,209 @@
+<div class="landing-conatainer">
+    <div class="landing__banner">
+        <img src="../../../../assets/img/default-image/landing-banner.jpg" alt="">
+        <div class="logo_image">
+            <img src="../../../../assets/img/logo.png" alt="">
+        </div>
+        <div class="menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28px" height="28px" viewBox="0 0 24 24" fill="none">
+                <path d="M5 6.5H19V8H5V6.5Z" fill="#1F2328" />
+                <path d="M5 16.5H19V18H5V16.5Z" fill="#1F2328" />
+                <path d="M5 11.5H19V13H5V11.5Z" fill="#1F2328" />
+            </svg>
+        </div>
+    </div>
+    <div class="address_bar">
+        <div class="container-lg container-xl">
+            <div class="row align-items-center">
+                <div class="col-6 col-md-4 col-lg-4 mb-3 mb-sm-0">
+                    <div class="d-flex switch">
+                        <div class="pickup active" (click)="onTypeChange()">
+                            <a><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    fill="#fff" version="1.1" id="Capa_1" width="14px" height="14px"
+                                    viewBox="0 0 335.765 335.765" xml:space="preserve">
+                                    <g>
+                                        <g>
+                                            <polygon
+                                                points="311.757,41.803 107.573,245.96 23.986,162.364 0,186.393 107.573,293.962 335.765,65.795   " />
+                                        </g>
+                                    </g>
+                                </svg> {{this._cartService.user_cart.is_user_pick_up_order ? 'Pick-up' : 'Delivery'}}</a>
+                        </div>
+                        <div class="pickup dine-in">
+                            <a>Dine-in</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-5 col-lg-4 mb-3 mb-sm-0">
+                    <div class="d-flex align-items-center order-type">
+                        <div class="asap">
+                            <a class="text-nowrap" (click)="onTypeChange()">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#525252" width="18px" height="18px"
+                                    viewBox="0 0 56.00 56.00">
+
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0" />
+
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
+
+                                    <g id="SVGRepo_iconCarrier">
+
+                                        <path
+                                            d="M 27.9999 51.9063 C 41.0546 51.9063 51.9063 41.0781 51.9063 28 C 51.9063 14.9453 41.0312 4.0937 27.9765 4.0937 C 14.8983 4.0937 4.0937 14.9453 4.0937 28 C 4.0937 41.0781 14.9218 51.9063 27.9999 51.9063 Z M 15.7187 30.5312 C 14.8046 30.5312 14.1014 29.8281 14.1014 28.8906 C 14.1014 27.9766 14.8046 27.2734 15.7187 27.2734 L 26.3593 27.2734 L 26.3593 13.0937 C 26.3593 12.1797 27.0624 11.4766 27.9765 11.4766 C 28.8905 11.4766 29.6171 12.1797 29.6171 13.0937 L 29.6171 28.8906 C 29.6171 29.8281 28.8905 30.5312 27.9765 30.5312 Z" />
+
+                                    </g>
+
+                                </svg> {{this._cartService.user_cart.is_schedule_order? 'Scheduled' : 'ASAP'}} </a>
+                        </div>
+                        <div class="address" (click)="onTypeChange()">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#525252" width="18px" height="18px"
+                                viewBox="0 0 256 256" id="Flat" class="pin">
+                                <path
+                                    d="M127.99414,15.9971a88.1046,88.1046,0,0,0-88,88c0,75.29688,80,132.17188,83.40625,134.55469a8.023,8.023,0,0,0,9.1875,0c3.40625-2.38281,83.40625-59.25781,83.40625-134.55469A88.10459,88.10459,0,0,0,127.99414,15.9971ZM128,72a32,32,0,1,1-32,32A31.99909,31.99909,0,0,1,128,72Z" />
+                            </svg>
+                            <input type="text" class="form-control" placeholder="Enter Your address" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-3 col-lg-4">
+                    <div class="store_search d-flex justify-content-end">
+                        <div class="position-relative">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"
+                                fill="none" class="search">
+                                <path
+                                    d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
+                                    stroke="#525252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <input type="text" class="form-control" placeholder="Search stores and menus">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="locations">
+        <div class="container-lg container-xl">
+            <h1>Locations</h1>
+            <div class="location-lists">
+                <div class="row">
+                    <div class="col-6 col-md-4 col-lg-3 mb-4">
+                        <div class="card" (click)="toStorePage()">
+                            <div class="card-image">
+                                <img src="../../../../assets/img/default-image/etto_location.jpg" alt="">
+                            </div>
+                            <div class="card-body">
+                                <p class="location">
+                                    Elsternwick
+                                </p>
+                                <p class="time">Order until 9:00pm • 15 mins</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3 mb-4">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="../../../../assets/img/default-image/etto_location2.jpg" alt="">
+                            </div>
+                            <div class="card-body">
+                                <p class="location">
+                                    Malvern
+                                </p>
+                                <p class="time">Order until 9:00pm • 10 mins</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3 mb-4">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="../../../../assets/img/default-image/etto_location.jpg" alt="">
+                            </div>
+                            <div class="card-body">
+                                <p class="location">
+                                    Richmond
+                                </p>
+                                <p class="time">Order until 9:30pm • 20 mins</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3 mb-4">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="../../../../assets/img/default-image/etto_location2.jpg" alt="">
+                            </div>
+                            <div class="card-body">
+                                <p class="location">
+                                    South Melbourne
+                                </p>
+                                <p class="time">Order until 9:30pm • 15 mins</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #changeAddress let-modal>
+    <div class="modal-body p-5">
+        <h6 class="mb-3">{{'label-title.select-your-address' | translate}}</h6>
+        <div class="form-group d-flex mb-4 align-items-center">
+            <label for="address">{{'label-title.address' | translate}}</label>
+            <input type="text"  id="address" class="form-control">
+        </div>
+        <h6 class="mb-3">{{'label-title.confirm-your-order-type' | translate}}</h6>
+        <div class="type d-flex">
+            <a class="pick-up me-3" (click)="this._cartService.user_cart.is_user_pick_up_order = true" [ngClass]="this._cartService.user_cart.is_user_pick_up_order ? 'active' :''">Pick-up</a>
+            <a class="pick-up" (click)="this._cartService.user_cart.is_user_pick_up_order = false" [ngClass]="!this._cartService.user_cart.is_user_pick_up_order ? 'active' :''">Delivery</a>
+        </div>
+        <div class="time d-flex">
+            <a class="pick-up me-3" (click)="this._cartService.user_cart.is_schedule_order = false" [ngClass]="!this._cartService.user_cart.is_schedule_order ? 'active' :''">ASAP</a>
+            <a class="pick-up" (click)="onSchedule()" [ngClass]="this._cartService.user_cart.is_schedule_order ? 'active' :''">Scheduled</a>
+        </div>
+        <div class="order text-end">
+            <a type="button" class="let-order" (click)="confirmSelection()">Let's Order</a>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #schedule let-modal>
+    <div class="modal-body p-5">
+        <h6 class="mb-3">{{'label-title.select-your-pick-up-or-delivery-window' | translate}}</h6>
+        <div class="date__time">
+            <ngb-carousel [animation]="false" id="homepage-schedule-date-carousel" (slide)="onSlide($event)">
+                <ng-template ngbSlide *ngFor="let date of date_array; let i = index;" [id]="'slideId_' + i">
+                    <div class="date-list text-center ">
+                        <span>{{date.date_format }}</span>
+                    </div>
+                    <div class="slots-list mt-3">
+                        <ul class="d-flex align-item-center flex-wrap row">
+                            <li class="col-4" *ngIf="time_array.length > 0 && date.date_format == ASAP">
+                                <a href="javascript:void(0)" id="slot{{-1}}_interval_{{-1}}"
+                                    [class.selected_time]="_cartService.user_cart.selected_time == 'asap'"
+                                    class="primary-btn notselected_time" (click)="set_time('asap')">ASAP</a>
+                            </li>
+                            <ng-container *ngFor="let time of time_array; let time_index = index;">
+                                <li class="col-4" *ngIf="time_index < time_length">
+                                    <a href="javascript:void(0)" id="slot{{time.type}}_interval_{{time_index}}"
+                                        (click)="set_time(time)"
+                                        [class.selected_time]="(_cartService.user_cart.selected_time && time.time === _cartService.user_cart.selected_time.time && time.date.date === _cartService.user_cart.selected_time.date.date)"
+                                        class="primary-btn notselected_time">{{time.time}}</a>
+                                </li>
+                            </ng-container>
+                            <div *ngIf="!slot1 && !slot2 && !slot3 && !slot4" class="col-12">
+                                {{'label-title.no-slots-available'
+                                | translate}}</div>
+                        </ul>
+                    </div>
+                    <div class="more-btn mt-3" *ngIf="time_array.length > time_length">
+                        <a type="button" (click)="onMore(i)">{{'label-title.more-times' | translate}}</a>
+                    </div>
+                    <div class="more-btn mt-3" *ngIf="time_array.length == time_length">
+                        <a type="button" (click)="onLess(i)">{{'label-title.show-less' | translate}}</a>
+                    </div>
+                </ng-template>
+            </ngb-carousel>
+        </div>
+    </div>
+</ng-template>
